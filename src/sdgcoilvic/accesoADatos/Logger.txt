@@ -1,0 +1,3 @@
+direccion = jdbc:mysql://localhost/coilvic
+usuario = root
+contrasenya = 1234

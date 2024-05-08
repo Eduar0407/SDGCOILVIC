@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="976.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.NuevaColaboraciónControlador">
+   <children>
+      <ImageView fx:id="imageSubMenu" fitHeight="549.0" fitWidth="976.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/SubMenu.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="734.0" layoutY="25.0" text="Universidad Veracruzana" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="6.0" layoutY="26.0" text="SDGCOILVIC" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="276.0" layoutY="2.0" text="Propuestas de colaboración" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="27.0" />
+         </font>
+      </Label>
+      <Button fx:id="button_Cancelar" layoutX="852.0" layoutY="378.0" mnemonicParsing="false" onAction="#button_Cancelar" style="-fx-background-color: #fc542c;" text="Cancelar">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TableView layoutX="33.0" layoutY="88.0" prefHeight="403.0" prefWidth="723.0">
+        <columns>
+          <TableColumn prefWidth="226.0" text="Nombre de la propuesta" />
+          <TableColumn minWidth="0.0" prefWidth="154.0" text="Estado" />
+            <TableColumn prefWidth="75.0" text="Column X" />
+        </columns>
+      </TableView>
+      <Button layoutX="814.0" layoutY="270.0" mnemonicParsing="false" style="-fx-background-color: #04c9fa;" text="Nueva Propuesta">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

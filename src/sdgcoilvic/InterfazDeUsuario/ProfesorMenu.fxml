@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="950.0" style="-fx-background-color: #D9D9D9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.ProfesorMenuControlador">
+    <children>
+        <ImageView fx:id="imageMenuProfesor" fitHeight="707.0" fitWidth="1256.0" layoutY="-9.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/MenuProfesor.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="330.0" fitWidth="697.0" layoutX="456.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/1.png" />
+            </image>
+        </ImageView>
+        <ImageView fx:id="imageSalir" fitHeight="81.0" fitWidth="82.0" layoutX="20.0" layoutY="14.0" onMouseClicked="#cerrarSesion" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/logOut.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <Label fx:id="label_Colaboracion" layoutX="31.0" layoutY="630.0" text="Colaboración">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="label_PropuestasColaboracion" layoutX="459.0" layoutY="634.0" text="Propuestas de colaboración">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="label_Bienvenido" layoutX="376.0" layoutY="11.0" text="¡Bienvenido Profesor!" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="53.0" />
+            </font>
+        </Label>
+        <Label fx:id="label_SDGCOIL" layoutX="162.0" layoutY="76.0" text="SDGCOIL-VIC" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="label_UV" layoutX="927.0" layoutY="71.0" prefHeight="46.0" prefWidth="328.0" text="UNIVERSIDAD VERACRUZANA" textAlignment="CENTER" textFill="#fffefe">
+            <font>
+                <Font name="Arial Black" size="19.0" />
+            </font>
+        </Label>
+        <ImageView fx:id="imageOfertasDeColaboracion" fitHeight="136.0" fitWidth="141.0" layoutX="249.0" layoutY="455.0" onMouseClicked="#imageOfertasDeColaboracion" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/colaboraciones.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <ImageView fx:id="imagePropuestasColaboracion" fitHeight="136.0" fitWidth="137.0" layoutX="508.0" layoutY="462.0" onMouseClicked="#imagePropuestasColaboracion" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/propuestaColaboracion.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <ImageView fx:id="imageColaboracion" fitHeight="134.0" fitWidth="138.0" layoutX="28.0" layoutY="453.0" onMouseClicked="#imageColaboracion"  pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/colaboracion.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <Label fx:id="label_OfertasColaboracion" layoutX="201.0" layoutY="632.0" text="Ofertas de colaboración">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Label>
+        <ImageView fx:id="imageSolicitudesColaboracion" fitHeight="137.0" fitWidth="135.0" layoutX="1080.0" layoutY="460.0" onMouseClicked="#imageSolicitudesColaboracion" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/solicitudColaboracion.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <Label fx:id="label_SolicitudesColaboracion" layoutX="1003.0" layoutY="636.0" text="Solicitudes de colaboración">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Label>
+        <ImageView fx:id="imageActividadesColaboracion" fitHeight="139.0" fitWidth="134.0" layoutX="791.0" layoutY="459.0" onMouseClicked="#imageActividadesColaboracion" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../recursos/actividades.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <Label fx:id="label_ActividadesColaboracion" layoutX="734.0" layoutY="631.0" prefHeight="30.0" prefWidth="248.0" text="Actividades de colaboración">
+            <font>
+                <Font name="Arial Bold" size="18.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

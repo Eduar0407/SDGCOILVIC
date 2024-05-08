@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="pane_Principal" prefHeight="520.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.GestionDeProfesoresControlador">
+   <children>
+      <ImageView fx:id="imageSubMenu" fitHeight="707.0" fitWidth="1256.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/SubMenu.png" />
+         </image>
+      </ImageView>
+      <Pane id="pane_Contenedor" layoutX="-2.0" layoutY="44.0" prefHeight="664.0" prefWidth="1260.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="44.0">
+         <children>
+            <TextField fx:id="textField_BuscarProfesor" layoutX="116.0" layoutY="54.0" prefHeight="25.0" prefWidth="316.0" promptText="Buscar profesor" style="-fx-background-radius: 13;">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <Label fx:id="label_Nombre" layoutX="41.0" layoutY="59.0" text="Nombre:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TableView fx:id="tableView_Profesores" layoutX="35.0" layoutY="154.0" prefHeight="449.0" prefWidth="914.0">
+               <columns>
+                  <TableColumn fx:id="column_Nombre" prefWidth="192.0" text="Nombre(s)" />
+                  <TableColumn fx:id="column_ApellidoPaterno" prefWidth="174.0" text="Apellido Paterno" />
+                  <TableColumn fx:id="column_ApellidoMaterno" minWidth="0.0" prefWidth="204.0" text="Apellido Materno" />
+                  <TableColumn fx:id="column_Correo" minWidth="0.0" prefWidth="209.0" text="Correo" />
+               </columns>
+            </TableView>
+            <Button fx:id="button_Buscar" layoutX="459.0" layoutY="54.0" mnemonicParsing="false" onAction="#button_Buscar" prefWidth="68.0" style="-fx-background-color: #04c9fa;" text="Buscar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ComboBox fx:id="comboBox_Idioma" layoutX="194.0" layoutY="102.0" onAction="#comboIdiomaSeleccionado" prefHeight="25.0" prefWidth="88.0" promptText="Idioma">
+               <effect>
+                  <ColorAdjust />
+               </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+            <Label layoutX="260.0" layoutY="102.0" />
+            <Label layoutX="38.0" layoutY="102.0" text="Filtra tu búsqueda:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="comboBox_Pais" layoutX="296.0" layoutY="102.0" onAction="#comboPaisSeleccionado" prefWidth="150.0" promptText="País">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+            <ComboBox fx:id="comboBox_Institucion" layoutX="454.0" layoutY="102.0" onAction="#comboInstitucionSeleccionada" prefWidth="164.0" promptText="Institución">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ComboBox>
+            <Button fx:id="button_Regresar" layoutX="1049.0" layoutY="563.0" mnemonicParsing="false" onAction="#button_Regresar" style="-fx-background-color: #f03c02;" text="Regresar" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="button_ModificarProfesor" layoutX="994.0" layoutY="413.0" mnemonicParsing="false" onAction="#button_ModificarProfesor" prefHeight="43.0" prefWidth="258.0" style="-fx-background-color: #04c9fa;" text="Modificar profesor" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Button>
+            <Label fx:id="label_Universidad" layoutX="966.0" layoutY="-7.0" text="Universidad Veracruzana" textFill="WHITE">
+               <font>
+                  <Font name="Arial Black" size="20.0" />
+               </font>
+            </Label>
+            <Button fx:id="button_AgregarProfesorUV" layoutX="976.0" layoutY="306.0" mnemonicParsing="false" onAction="#button_AgregarProfesorUV" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #84C232;" text="Agregar Profesor UV" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="button_AgregarProfesorExterno" layoutX="975.0" layoutY="220.0" mnemonicParsing="false" onAction="#button_AgregarProfesorExterno" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #84C232;" text="Agregar Profesor Externo" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
+      <Label fx:id="label_SDGCOILVIC" layoutX="13.0" layoutY="35.0" text="SDGCOILVIC" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_GestionProfesores" layoutX="467.0" layoutY="16.0" text="Gestión de Profesores" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="27.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
