@@ -12,8 +12,8 @@ public class AccesoDAOTest {
         Acceso acceso = new Acceso();
         AccesoDAO accesoDAO = new AccesoDAO();
         acceso.setContrasenia("eduardo01@");
-        acceso.setUsuario("profesor");
-        acceso.setTipoUsuario(1);
+        acceso.setUsuario("administrativo");
+        acceso.setTipoUsuario(0);
         int resultadoEsperado = 1;
         int resultadoObtenido = accesoDAO.agregarAcceso(acceso);
         assertEquals(resultadoEsperado , resultadoObtenido);

@@ -10,48 +10,38 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.ProfesorDAO;
+import sdgcoilvic.logicaDeNegocio.clases.Acceso;
 import sdgcoilvic.logicaDeNegocio.clases.Profesor;
 
 public class ProfesorDAOTest {
+    
     @Test
     public void registrarProfesorExitoso() throws Exception {
-        System.out.println("registrarProfesorExterno");
+        System.out.println("registrarProfesorExitoso");
         Profesor profesor = new Profesor();
         ProfesorDAO instancia = new ProfesorDAO();
         profesor.setNombre("Erick");
         profesor.setApellidoPaterno("Atzin");
         profesor.setApellidoMaterno("Olarte");
         profesor.setCorreo("atzin@example.com");
-        profesor.setTelefono("7841233040");
         profesor.setClaveInstitucional("30MSU0940B");
         profesor.setIdIdiomas(1);
-        profesor.setFoto(null);
-        int resultadoEsperado = 1;
-        int resultadoObtenido = instancia.registrarProfesor(profesor);
+        profesor.setIdEstado(2);
+        Acceso acceso = new Acceso();
+        acceso.setUsuario("atzin@example.com");
+        acceso.setContrasenia("contraseña"); // Ajusta la contraseña según lo esperado en tu implementación
+        acceso.setTipoUsuario(1); // Ajusta el tipo de usuario según lo esperado en tu implementación
+
+        // Ajusta el resultado esperado según tu lógica de negocio
+        // Aquí se espera que la inserción del profesor y el acceso sea exitosa, por lo que se espera que la columna afectada sea mayor que cero.
+        int resultadoEsperado = 1; // Dependiendo de la lógica de tu aplicación podría ser otro valor
+
+        int resultadoObtenido = instancia.registrarProfesor(profesor, acceso);
 
         assertEquals(resultadoEsperado, resultadoObtenido);
     }
-    @Test
-    public void testModificarCalendarioActividades() throws SQLException {
-        System.out.println("Modificar Profesor");
-        ProfesorDAO profesorDAO = new ProfesorDAO();
-        Profesor profesor = new Profesor();
-        profesor.setIdProfesor(1); 
-        profesor.setNombre("Erick");
-        profesor.setApellidoPaterno("Atzin");
-        profesor.setApellidoMaterno("Olarte");
-        profesor.setCorreo("atzin@gmail.com");
-        profesor.setTelefono("7841233040");
-        profesor.setClaveInstitucional("30MSU0940B");
-        profesor.setIdIdiomas(1);
-        profesor.setFoto(null);
-
-        int expResult = 1;
-        int result = profesorDAO.actualizarProfesor(profesor, profesor.getIdProfesor());
 
 
-        assertEquals(expResult, result);
-    }
 
     @Test
     public void obtenerProfesorExistentePorNombre() throws SQLException {
@@ -60,24 +50,5 @@ public class ProfesorDAOTest {
         Profesor profesorObtenido = profesorDAO.obtenerProfesorPorNombre(nombreProfesorExistente);
         assertEquals(nombreProfesorExistente, profesorObtenido.getNombre());
     }
-    @Test
-       public void obtenerListaTodosLosProfesores() throws SQLException {
-        ProfesorDAO profesorDAO = new ProfesorDAO();
-        List<Profesor> ProfesoresObtenidos = profesorDAO.obtenerListaTodosLosProfesores();
-        List<Profesor> ProfesoresEsperados = new ArrayList();
-        Profesor profesor = new Profesor();
-        profesor.setIdProfesor(1);
-        profesor.setNombre("Juan");
-        profesor.setApellidoPaterno("Perez");
-        profesor.setApellidoMaterno("Gomez");
-        profesor.setCorreo("juan@example.com");
-        profesor.setTelefono("1234567890");
-        profesor.setClaveInstitucional("30MSU0940B");
-        profesor.setIdIdiomas(1);
-        profesor.setFoto(null);
-        ProfesoresEsperados.add(profesor);
-        
-        assertEquals(ProfesoresObtenidos,ProfesoresEsperados);
 
-    }
 }

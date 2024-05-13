@@ -40,11 +40,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TableView layoutX="33.0" layoutY="88.0" prefHeight="403.0" prefWidth="723.0">
+      <TableView layoutX="33.0" layoutY="88.0" prefHeight="403.0" prefWidth="668.0">
         <columns>
           <TableColumn prefWidth="226.0" text="Nombre de la propuesta" />
-          <TableColumn minWidth="0.0" prefWidth="154.0" text="Estado" />
-            <TableColumn prefWidth="75.0" text="Column X" />
+          <TableColumn minWidth="0.0" prefWidth="154.0" text="Tipo" />
+            <TableColumn prefWidth="75.0" text="Periodo" />
+            <TableColumn prefWidth="75.0" text="Estado" />
+            <TableColumn prefWidth="137.0" text="Corregir" />
         </columns>
       </TableView>
       <Button layoutX="814.0" layoutY="270.0" mnemonicParsing="false" style="-fx-background-color: #04c9fa;" text="Nueva Propuesta">

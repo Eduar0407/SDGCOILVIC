@@ -18,6 +18,10 @@ public class Alertas {
         return mostrarAlertaDeConfirmacion(titulo, contenido);
     }
     
+    public static void mostrarMensajeProfesorNoSeleccionado() {
+        mostrarAlerta(AlertType.INFORMATION, "AVISO", "Debe seleccionar un Profesor");
+    }
+    
     public static void mostrarMensajeInicioSesionFallido() {
         mostrarAlerta(AlertType.ERROR, "AVISO", "Usuario o contraseña incorrectos");
     }
@@ -30,6 +34,10 @@ public class Alertas {
     public static void mostrarMensajeErrorBaseDatos() {
         mostrarMensaje(AlertType.ERROR, "ERROR", 
                 "No se pudo conectar con la base de datos.\nInténtelo de nuevo o hágalo más tarde");
+    }
+    
+    public static void mostrarMensajeNoHayInstitucionesRegistradas() {
+       mostrarAlerta(AlertType.ERROR, "Error", "No Hay Instituciones Registradas en la base");
     }
     
     public static void mostrarMensajeSinResultados() {
@@ -55,6 +63,10 @@ public class Alertas {
    
     public static void mostrarMensajeInformacionNoRegistrada() {
         mostrarAlerta(AlertType.ERROR, "Error", "Hubo un error, no pudimos almacenar su informacion");
+    }
+    
+    public static void mostrarMensajeInstitucionNoEncontrada() {
+        mostrarAlerta(AlertType.INFORMATION, "AVISO", "No existe coincidencias");
     }
     
     public static void mostrarMensajeExito() {
@@ -89,6 +101,8 @@ public class Alertas {
     public static boolean mostrarMensajeConfirmacionDesactivar() {
         return mostrarConfirmacion("AVISO", "¿Estás seguro que deseas desactivar?");
     }
+    
+    
 
     private static void mostrarAlerta(AlertType tipoAlerta, String titulo, String contenido) {
         Alert alerta = new Alert(tipoAlerta);

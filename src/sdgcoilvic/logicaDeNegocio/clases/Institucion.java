@@ -6,10 +6,12 @@ public class Institucion {
     private String nombrePais;
     private String correo;
 
-    private final static String EXPRESION_REGULAR_CLAVE_INSTITUCIONAL = "^[a-zA-Z0-9]{1,20}$";
-    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[a-zA-Z]+$";
-    private final static String EXPRESION_REGULAR_NOMBRE_PAIS = "^[a-zA-ZáéíóúÁÉÍÓÚüÜ\\s]+$";
-    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,}$";
+    private final static String EXPRESION_REGULAR_CLAVE_INSTITUCIONAL = "^[A-Z0-9]{1,20}$";
+    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[\\p{L}0-9áéíóúÁÉÍÓÚüÜ\\s]{1,200}$";
+    private final static String EXPRESION_REGULAR_NOMBRE_PAIS = "^[\\p{L}0-9áéíóúÁÉÍÓÚüÜ\\s]{1,60}$";
+    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
+
+
 
     public String getClaveInstitucional() {
         return claveInstitucional;
@@ -50,8 +52,25 @@ public class Institucion {
 
     public void setCorreo(String correo) {
         if (!correo.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO)) {
-            throw new IllegalArgumentException("El correo electrónico es inválido.");
+            throw new IllegalArgumentException();
         }
         this.correo = correo;
+    }
+     @Override
+    public String toString() {
+        return claveInstitucional + " " + nombreInstitucion + " " + nombrePais + " " + correo;
+    }
+    
+    @Override 
+    public boolean equals(Object object) {
+        if((object == null) || (object.getClass() != this.getClass())) {
+            return false;
+        } 
+       final Institucion otraInstitucion = (Institucion) object;
+       return (this.claveInstitucional == null ? otraInstitucion.claveInstitucional == null : this.claveInstitucional.equals(otraInstitucion.claveInstitucional))
+            && (this.nombreInstitucion == null ? otraInstitucion.nombreInstitucion == null : this.nombreInstitucion.equals(otraInstitucion.nombreInstitucion))
+            && (this.nombrePais == null ? otraInstitucion.nombrePais == null : this.nombrePais.equals(otraInstitucion.nombrePais))   
+            && (this.correo == null ? otraInstitucion.correo == null : this.correo.equals(otraInstitucion.correo));
+ 
     }
 }
