@@ -1,7 +1,5 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
-import com.mysql.cj.jdbc.Blob;
-import java.util.Objects;
 
 public class Profesor {
     private int idProfesor;
@@ -9,10 +7,13 @@ public class Profesor {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String correo;
-    private String telefono;
     private String claveInstitucional;
     private int idIdiomas;
-    private Blob foto;
+    private int idEstado;
+    private int idAcceso;
+
+    private final static String EXPRESION_REGULAR = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s]{1,60}$";
+    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
 
     public int getIdProfesor() {
         return idProfesor;
@@ -21,12 +22,15 @@ public class Profesor {
     public void setIdProfesor(int idProfesor) {
         this.idProfesor = idProfesor;
     }
-
+    
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
+        if (!nombre.matches(EXPRESION_REGULAR)) {
+            throw new IllegalArgumentException();
+        }
         this.nombre = nombre;
     }
 
@@ -35,6 +39,9 @@ public class Profesor {
     }
 
     public void setApellidoPaterno(String apellidoPaterno) {
+        if (!apellidoPaterno.matches(EXPRESION_REGULAR)) {
+            throw new IllegalArgumentException();
+        }
         this.apellidoPaterno = apellidoPaterno;
     }
 
@@ -43,6 +50,9 @@ public class Profesor {
     }
 
     public void setApellidoMaterno(String apellidoMaterno) {
+        if (!apellidoMaterno.matches(EXPRESION_REGULAR)) {
+            throw new IllegalArgumentException();
+        }
         this.apellidoMaterno = apellidoMaterno;
     }
 
@@ -51,15 +61,10 @@ public class Profesor {
     }
 
     public void setCorreo(String correo) {
+        if (!correo.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO)) {
+            throw new IllegalArgumentException();
+        }
         this.correo = correo;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
     }
 
     public String getClaveInstitucional() {
@@ -77,31 +82,43 @@ public class Profesor {
     public void setIdIdiomas(int idIdiomas) {
         this.idIdiomas = idIdiomas;
     }
-
-    public Blob getFoto() {
-        return foto;
+    
+    public int getIdEstado() {
+        return idEstado;
     }
 
-    public void setFoto(Blob foto) {
-        this.foto = foto;
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
+    }
+    
+    public int getIdAcceso() {
+        return idAcceso;
+    }
+
+    public void setIdAcceso(int idAcceso) {
+        this.idAcceso = idAcceso;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellidoPaterno + " " + apellidoMaterno + " " + correo;
     }
     
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;         }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false; 
-        }
-        Profesor otroProfesor = (Profesor) obj;
-        return idProfesor == otroProfesor.idProfesor &&
-                Objects.equals(nombre, otroProfesor.nombre) &&
-                Objects.equals(apellidoPaterno, otroProfesor.apellidoPaterno) &&
-                Objects.equals(apellidoMaterno, otroProfesor.apellidoMaterno) &&
-                Objects.equals(correo, otroProfesor.correo) &&
-                Objects.equals(telefono, otroProfesor.telefono) &&
-                Objects.equals(claveInstitucional, otroProfesor.claveInstitucional) &&
-                idIdiomas == otroProfesor.idIdiomas &&
-                Objects.equals(foto, otroProfesor.foto);
+    public boolean equals(Object object) {
+        if ((object == null) || (object.getClass() != this.getClass())) {
+            return false;
+        } 
+        final Profesor otroProfesor = (Profesor) object;
+        return (this.idProfesor == otroProfesor.idProfesor
+            && this.nombre == null ? otroProfesor.nombre == null : this.nombre.equals(otroProfesor.nombre))
+            && (this.apellidoPaterno == null ? otroProfesor.apellidoPaterno == null : this.apellidoPaterno.equals(otroProfesor.apellidoPaterno))   
+            && (this.apellidoMaterno == null ? otroProfesor.apellidoMaterno == null : this.apellidoMaterno.equals(otroProfesor.apellidoMaterno))  
+            && (this.correo == null ? otroProfesor.correo == null : this.correo.equals(otroProfesor.correo))
+            && (this.claveInstitucional == null ? otroProfesor.claveInstitucional == null : this.claveInstitucional.equals(otroProfesor.claveInstitucional))
+            && this.idIdiomas == otroProfesor.idIdiomas
+            && this.idEstado == otroProfesor.idEstado
+            && this.idAcceso == otroProfesor.idAcceso;
     }
+
 }

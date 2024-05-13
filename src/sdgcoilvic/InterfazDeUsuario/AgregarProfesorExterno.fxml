@@ -25,7 +25,7 @@
                                 <Image url="@../recursos/escudocoilvic.jpg" />
                             </image>
                         </ImageView>
-                        <Button fx:id="button_Cancelar" layoutX="252.0" layoutY="326.0" mnemonicParsing="false" style="-fx-background-color: #fc542c;" text="Cancelar" onAction="#cancelarRegistro">
+                        <Button fx:id="button_Cancelar" layoutX="252.0" layoutY="326.0" mnemonicParsing="false" onAction="#cancelarRegistro" style="-fx-background-color: #fc542c;" text="Cancelar">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
@@ -33,7 +33,7 @@
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Button>
-                        <Button fx:id="button_Guardar" layoutX="374.0" layoutY="325.0" mnemonicParsing="false" style="-fx-background-color: #04c9fa;" text="Guardar" onAction="#guardarRegistro">
+                        <Button fx:id="button_Guardar" layoutX="374.0" layoutY="325.0" mnemonicParsing="false" onAction="#guardarRegistro" style="-fx-background-color: #04c9fa;" text="Guardar">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
@@ -51,16 +51,41 @@
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <ComboBox fx:id="combo_Idioma" layoutX="203.0" layoutY="181.0" prefHeight="25.0" prefWidth="243.0" promptText="Seleccione su idioma">
+                        <ComboBox fx:id="comboBox_Idioma" layoutX="203.0" layoutY="181.0" prefHeight="25.0" prefWidth="243.0" promptText="Seleccione su idioma">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </ComboBox>
-                        <ComboBox fx:id="combo_Institucion" layoutX="203.0" layoutY="220.0" prefHeight="25.0" prefWidth="243.0" promptText="Seleccione su institución">
+                        <ComboBox fx:id="comboBox_Institucion" layoutX="203.0" layoutY="220.0" prefHeight="25.0" prefWidth="243.0" promptText="Seleccione su institución">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </ComboBox>
+                  <Label fx:id="label_ErrorApellidoPaterno" layoutX="448.0" layoutY="70.0" text="*" textFill="RED">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label_ErrorApellidoMaterno" layoutX="449.0" layoutY="111.0" text="*" textFill="RED">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label_ErrorCorreo" layoutX="449.0" layoutY="144.0" text="*" textFill="RED">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label_ErrorIdioma" layoutX="454.0" layoutY="185.0" text="*" textFill="RED">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label_ErrorInstitucion" layoutX="454.0" layoutY="224.0" text="*" textFill="RED">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
                     </children>
                 </Pane>
                 <Label fx:id="label_Nombre" alignment="CENTER" layoutX="141.0" layoutY="46.0" style="&#10;" text="Nombre" textAlignment="CENTER" wrapText="false">
@@ -68,7 +93,7 @@
                         <Font name="Arial Bold" size="12.0" />
                     </font>
                 </Label>
-                <TitledPane fx:id="pane_Titulo" animated="false" collapsible="false" prefHeight="27.0" prefWidth="640.0" text="SDGCOILVIC Profesor externo Universidad Veracruzana" wrapText="true" />
+                <TitledPane fx:id="pane_Titulo" animated="false" collapsible="false" prefHeight="27.0" prefWidth="640.0" text="SDGCOILVIC       Profesor externo                                                                                                  Universidad Veracruzana" wrapText="true" />
                 <Label fx:id="label_ApellidoPaterno" alignment="CENTER" layoutX="93.0" layoutY="81.0" style="&#10;" text="Apellido paterno" textAlignment="CENTER" wrapText="false">
                     <font>
                         <Font name="Arial Bold" size="12.0" />
@@ -107,6 +132,11 @@
                         <Cursor fx:constant="TEXT" />
                     </cursor>
                 </TextField>
+            <Label fx:id="label_ErrorNombre" layoutX="448.0" layoutY="40.0" text="*" textFill="RED">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
             </children>
         </AnchorPane>
     </children>

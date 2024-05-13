@@ -76,7 +76,12 @@ public class AgregarProfesorUVControlador implements Initializable{
     @FXML
     private TextField txt_Nombre;
 
+    private Runnable onCloseCallback;
 
+    public void setOnCloseCallback(Runnable onCloseCallback) {
+        this.onCloseCallback = onCloseCallback;
+    }
+    
     @FXML
     void button_Cancelar(ActionEvent event) {
         Stage myStage = (Stage) button_Cancelar.getScene().getWindow();

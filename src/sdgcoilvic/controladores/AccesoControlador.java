@@ -53,7 +53,7 @@ public class AccesoControlador implements Initializable {
                 }
             } catch (SQLException sqlException) {
                 Alertas.mostrarMensajeErrorBaseDatos();
-                LOG.fatal(sqlException);
+                LOG.fatal("No hay conexión con la base de datos :" +this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
             }
         } else {
             Alertas.mostrarMensajeCamposVacios();
@@ -96,9 +96,9 @@ public class AccesoControlador implements Initializable {
                     case ADMINISTRATIVO -> abrirVentanaAdministrativoMenu();
                     case PROFESOR -> abrirVentanaProfesorMenu();
                 }
-            } catch (SQLException sql) {
+            } catch (SQLException sqlException) {
                 Alertas.mostrarMensajeErrorBaseDatos();
-                LOG.fatal(sql);
+                LOG.fatal("No hay conexión con la base de datos :" +this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
             }
         }
     }
