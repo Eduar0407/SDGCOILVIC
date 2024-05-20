@@ -1,12 +1,14 @@
 package sdgcoilvic.logicaDeNegocio.interfaces;
 
+import java.sql.SQLException;
 import java.util.List;
-import sdgcoilvic.logicaDeNegocio.clases.SolicitudColaboracion;
 
 public interface ISolicitudColaboracion {
-    int elaborarSolicitudColaboracion(SolicitudColaboracion solicitud) ;
-    int evaluarSolicitudColaboracion(SolicitudColaboracion solicitud, boolean aprobada);
-    List<SolicitudColaboracion> consultarSolicitudesColaboracion();
-    List<SolicitudColaboracion> consultarSolicitudesColaboracionPorProfesor(int idProfesor);
-    List<SolicitudColaboracion> consultarSolicitudesColaboracionPorEstado(boolean aprobada);
+    public List<List<String>> consultarSolicitudesColaboracion(int idProfesor)throws SQLException ;
+    public int enviarSolicitudDeColaboracion(int idPropuestaColaboracion, String mensaje, int idProfesor) throws SQLException ;
+    public int rechazarSolicitud(int idSolicitudColaboracion) throws SQLException ;
+    public int aceptarSolicitud(int idSolicitudColaboracion) throws SQLException ;
+    public int reevertirEvaluacion(int idSolicitudColaboracion) throws SQLException ;
+    public String obtenerSolicitudesAprobadas(int idSolicitudColaboracion) throws SQLException ;
+    public boolean verificarEstadoColaboracion(int idProfesor)throws SQLException;
 }

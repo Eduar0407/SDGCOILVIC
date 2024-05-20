@@ -1,8 +1,9 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 public class Colaboracion {
     private int idColaboracion;
-    private String nombreCurso;
     private String descripcion;
     private String recursos;
     private int idPeriodo;
@@ -10,9 +11,10 @@ public class Colaboracion {
     private String detallesAsistenciaParticipacion;
     private String detallesEvaluacion;
     private String detallesEntorno;
-    private int idEstadoColaboracion;
-    private int idCalendarioActividades;
     private int idPropuestaColaboracion;
+    private String estadoColaboracion;
+
+    private final static String EXPRESION_REGULAR = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$";
 
     public Colaboracion() {
     }
@@ -25,20 +27,12 @@ public class Colaboracion {
         this.idColaboracion = idColaboracion;
     }
 
-    public String getNombreCurso() {
-        return nombreCurso;
-    }
-
-    public void setNombreCurso(String nombreCurso) {
-        this.nombreCurso = nombreCurso;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion = validarCadena(descripcion);
     }
 
     public String getRecursos() {
@@ -46,7 +40,7 @@ public class Colaboracion {
     }
 
     public void setRecursos(String recursos) {
-        this.recursos = recursos;
+        this.recursos = validarCadena(recursos);
     }
 
     public int getIdPeriodo() {
@@ -62,7 +56,7 @@ public class Colaboracion {
     }
 
     public void setAprendizajesEsperados(String aprendizajesEsperados) {
-        this.aprendizajesEsperados = aprendizajesEsperados;
+        this.aprendizajesEsperados = validarCadena(aprendizajesEsperados);
     }
 
     public String getDetallesAsistenciaParticipacion() {
@@ -70,7 +64,7 @@ public class Colaboracion {
     }
 
     public void setDetallesAsistenciaParticipacion(String detallesAsistenciaParticipacion) {
-        this.detallesAsistenciaParticipacion = detallesAsistenciaParticipacion;
+        this.detallesAsistenciaParticipacion = validarCadena(detallesAsistenciaParticipacion);
     }
 
     public String getDetallesEvaluacion() {
@@ -78,7 +72,7 @@ public class Colaboracion {
     }
 
     public void setDetallesEvaluacion(String detallesEvaluacion) {
-        this.detallesEvaluacion = detallesEvaluacion;
+        this.detallesEvaluacion = validarCadena(detallesEvaluacion);
     }
 
     public String getDetallesEntorno() {
@@ -86,23 +80,15 @@ public class Colaboracion {
     }
 
     public void setDetallesEntorno(String detallesEntorno) {
-        this.detallesEntorno = detallesEntorno;
+        this.detallesEntorno = validarCadena(detallesEntorno);
     }
 
-    public int getIdEstadoColaboracion() {
-        return idEstadoColaboracion;
+    public String getEstadoColaboracion() {
+        return estadoColaboracion;
     }
 
-    public void setIdEstadoColaboracion(int idEstadoColaboracion) {
-        this.idEstadoColaboracion = idEstadoColaboracion;
-    }
-
-    public int getIdCalendarioActividades() {
-        return idCalendarioActividades;
-    }
-
-    public void setIdCalendarioActividades(int idCalendarioActividades) {
-        this.idCalendarioActividades = idCalendarioActividades;
+    public void setEstadoColaboracion(String estadoColaboracion) {
+        this.estadoColaboracion = estadoColaboracion;
     }
 
     public int getIdPropuestaColaboracion() {
@@ -111,5 +97,13 @@ public class Colaboracion {
 
     public void setIdPropuestaColaboracion(int idPropuestaColaboracion) {
         this.idPropuestaColaboracion = idPropuestaColaboracion;
+    }
+
+    private String validarCadena(String cadena) {
+        if (cadena != null && Pattern.matches(EXPRESION_REGULAR, cadena.trim())) {
+            return cadena.trim().replaceAll("\\s+", " ");
+        } else {
+            throw new IllegalArgumentException("La cadena no cumple con las reglas de validación.");
+        }
     }
 }

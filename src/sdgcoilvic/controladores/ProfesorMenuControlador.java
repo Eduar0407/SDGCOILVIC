@@ -10,13 +10,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import sdgcoilvic.Utilidades.AccesoSingleton;
-import sdgcoilvic.Utilidades.Alertas;
-import sdgcoilvic.Utilidades.ImagesSetter;
+import sdgcoilvic.utilidades.AccesoSingleton;
+import sdgcoilvic.utilidades.Alertas;
+import sdgcoilvic.utilidades.ImagesSetter;
 
 public class ProfesorMenuControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(ProfesorMenuControlador.class);
-   
+
     @FXML
     private ImageView imageSalir;
     @FXML
@@ -58,12 +58,26 @@ public class ProfesorMenuControlador implements Initializable{
     
     @FXML
     private void imageOfertasDeColaboracion(MouseEvent event) {
-  
+          Stage myStage = (Stage) imagePropuestasColaboracion.getScene().getWindow();
+        SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+
+        try {
+            sdgcoilvic.mostrarVentanaAdministrarColaboracionesDisponibles(myStage);
+        } catch (IOException ex) {
+            LOG.error( ex);
+        }
     }
     
     @FXML
     private void imagePropuestasColaboracion(MouseEvent event) {
-  
+        Stage myStage = (Stage) imagePropuestasColaboracion.getScene().getWindow();
+        SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+
+        try {
+            sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+        } catch (IOException ex) {
+            LOG.error( ex);
+        }
     }
     
     @FXML

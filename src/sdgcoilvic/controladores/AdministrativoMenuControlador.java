@@ -1,10 +1,9 @@
 package sdgcoilvic.controladores;
 
-import sdgcoilvic.Utilidades.ImagesSetter;
+import sdgcoilvic.utilidades.ImagesSetter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tooltip;
@@ -12,12 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import sdgcoilvic.Utilidades.Alertas;
-import sdgcoilvic.Utilidades.AccesoSingleton;
+import sdgcoilvic.utilidades.Alertas;
+import sdgcoilvic.utilidades.AccesoSingleton;
 
 public class AdministrativoMenuControlador implements Initializable {
     private static final Logger LOG = Logger.getLogger(AdministrativoMenuControlador.class);
-   
+
     @FXML
     private ImageView imageView_Salir;
     @FXML
@@ -35,6 +34,7 @@ public class AdministrativoMenuControlador implements Initializable {
     private ImageView imageMenuAdministrativo;
     
     private void mostrarImagen() {
+ 
         imageMenuAdministrativo.setImage(ImagesSetter.getImageMenuAdministrativo());
     }
    
@@ -107,7 +107,6 @@ public class AdministrativoMenuControlador implements Initializable {
     private void abrirVentanaInstituciones(MouseEvent event) {
         Stage myStage = (Stage) imageView_Instituciones.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-
         try {
             sdgcoilvic.mostrarVentanaGestionDeInstituciones(myStage);
         } catch (IOException ex) {

@@ -1,20 +1,25 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
 public class TablaProfesor {
+    
     int idProfesor;
     String nombre;
     String apellidoPaterno;
     String apellidoMaterno;
     String correo;
+    String claveInstitucional;
+    String estadoProfesor;
     
-    public TablaProfesor( int idProfesor, String nombre, String apellidoPaterno, String apellidoMaterno, String correo) {
+    public TablaProfesor(int idProfesor,  String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String claveInstitucional, String estadoProfesor) {
         this.idProfesor = idProfesor;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
+        this.claveInstitucional = claveInstitucional;
+        this.estadoProfesor = estadoProfesor;
     }
-
+    
     public int getIdProfesor() {
         return idProfesor;
     }
@@ -53,6 +58,22 @@ public class TablaProfesor {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+    
+    public String getClaveInstitucional() {
+        return claveInstitucional;
+    }
+
+    public void setClaveInstitucional(String claveInstitucional) {
+        this.claveInstitucional = claveInstitucional;
+    }
+    
+    public String getEstadoProfesor() {
+        return estadoProfesor;
+    }
+
+    public void setEstadoProfesor(String estadoProfesor) {
+        this.estadoProfesor = estadoProfesor;
     }
 
 }

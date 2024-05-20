@@ -22,34 +22,39 @@ import org.apache.log4j.Logger;
 import sdgcoilvic.logicaDeNegocio.clases.PropuestaColaboracion;
 import sdgcoilvic.logicaDeNegocio.clases.TablaPropuestasColaboracion;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PeriodoDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
+import sdgcoilvic.utilidades.AccesoSingleton;
 import sdgcoilvic.utilidades.Alertas;
 import sdgcoilvic.utilidades.ImagesSetter;
 
-public class GestionDePropuestasColaboracionControlador implements Initializable{
+public class AdministrarColaboracionesDisponiblesControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(GestionDePropuestasColaboracionControlador.class);
+    private AccesoSingleton accesoSingleton;
     ObservableList<TablaPropuestasColaboracion> lista = FXCollections.observableArrayList();
-    
     @FXML private Button button_Regresar;
-    @FXML private TableView<TablaPropuestasColaboracion> tableView_Propuestas;
-    @FXML private TableColumn<TablaPropuestasColaboracion, String> column_NombrePropuesta;
-    @FXML private TableColumn<TablaPropuestasColaboracion, String> column_Profesor;
-    @FXML private TableColumn<TablaPropuestasColaboracion, String> column_Modalidad;
-    @FXML private TableColumn<TablaPropuestasColaboracion, String> column_Periodo;
-    @FXML private TableColumn<TablaPropuestasColaboracion, Void> column_Evaluar;
-    
+    @FXML private TableView<TablaPropuestasColaboracion> tableView_Colaboraciones;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Nombre;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Profesor;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Periodo;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Modalidad;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Objetivo;
+    @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Idioma;
+    @FXML private TableColumn<TablaPropuestasColaboracion, Void > tableColumn_EnviarSolicitud;
     @FXML private ImageView imageView_SubMenu;  
+    
     private void mostrarImagen() {
         imageView_SubMenu.setImage(ImagesSetter.getImageSubMenu());
     }
     
+        
     @FXML
     void button_Regresar(ActionEvent event) {
        Stage myStage = (Stage) button_Regresar.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaAdministrativoMenu(myStage);
+            sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -57,18 +62,19 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        accesoSingleton = AccesoSingleton.getInstance();
         llenarTabla();
         mostrarImagen();
-        column_Evaluar.setCellFactory(param -> new TableCell<>() {
-            private final Button button_Evaluar = new Button("EVALUAR");
+        tableColumn_EnviarSolicitud.setCellFactory(param -> new TableCell<>() {
+            private final Button button_EnviarSolicitud = new Button("ENVIAR SOLICITUD");
             {
-                button_Evaluar.setOnAction(event -> {
+                button_EnviarSolicitud.setOnAction(event -> {
                     TablaPropuestasColaboracion data = getTableView().getItems().get(getIndex());                                                                     
-                    try {                     
-                        SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                        Stage stage = (Stage) button_Evaluar.getScene().getWindow();
-                        EvaluarPropuestaColaboracionControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
-                        sdgcoilvic.mostrarVentanaEvaluarPropuestaDeColaboracion(stage );
+                    try {   
+                            SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+                            Stage stage = (Stage) button_EnviarSolicitud.getScene().getWindow();
+                            DeclaracionDePropositoControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
+                            sdgcoilvic.mostrarVentanaDeclaracionDeProposito(stage );
                     } catch (IOException ioexception) {
                         LOG.error(ioexception.getMessage());
                         Alertas.mostrarMensajeErrorCambioPantalla();
@@ -81,7 +87,8 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(button_Evaluar);
+                    
+                    setGraphic(button_EnviarSolicitud);
                 }
             }
         });
@@ -91,12 +98,15 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
         PropuestaColaboracionDAO propuestaColaboracionDAO = new PropuestaColaboracionDAO();
         List<PropuestaColaboracion> propuestasLista = null;
         List<List<String>> listaPeriodos = null;
+         List<List<String>> listaIdiomas = null;
         List<List<String>> listaNombresProfesores = null;
+        int idAcceso = accesoSingleton.getAccesoId();
         try {
             lista.clear();
             listaPeriodos = obtenerListaDePeriodo();
+            listaIdiomas = obtenerListaDeIdiomas();
             listaNombresProfesores = obtenerListDeNombresProfesores();
-            propuestasLista = propuestaColaboracionDAO.consultarTodasLasPropuestasColaboracionEnEspera();
+            propuestasLista = propuestaColaboracionDAO.consultarTodasLasPropuestasColaboracionOfertadas(idAcceso);
             for (PropuestaColaboracion propuestaColaboracion : propuestasLista) {
                 String periodoInfo = "";
                 for (List<String> periodo : listaPeriodos) {
@@ -110,6 +120,16 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
                     }
                 }
                 
+                String idiomaNombre = "";
+                for (List<String> idioma : listaIdiomas) {
+                    int id = Integer.parseInt(idioma.get(0));
+                    if (id == propuestaColaboracion.getIdIdiomas()) {
+                        String idIdioma = idioma.get(1);
+                        idiomaNombre = idIdioma ;
+                        break;
+                    }
+                }
+                
                 String nombreCompleto = "";
                 for (List<String> profesor : listaNombresProfesores) {
                     int id = Integer.parseInt(profesor.get(0));
@@ -119,7 +139,6 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
                         break;
                     }
                 }
-                
                 lista.add(new TablaPropuestasColaboracion(
                         propuestaColaboracion.getIdPropuestaColaboracion(),
                         propuestaColaboracion.getTipoColaboracion(),
@@ -129,16 +148,18 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
                         periodoInfo,
                         propuestaColaboracion.getEstadoPropuesta(),
                         nombreCompleto,
-                        String.valueOf(propuestaColaboracion.getIdIdiomas())
+                        idiomaNombre
                 ));
 
             }
 
-            tableView_Propuestas.setItems(lista);
-            column_NombrePropuesta.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            column_Periodo.setCellValueFactory(new PropertyValueFactory<>("idPeriodo"));
-            column_Profesor.setCellValueFactory(new PropertyValueFactory<>("nombreProfesor"));
-            column_Modalidad.setCellValueFactory(new PropertyValueFactory<>("tipoColaboracion"));
+                tableView_Colaboraciones.setItems(lista);
+                tableColumn_Nombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+                tableColumn_Profesor.setCellValueFactory(new PropertyValueFactory<>("nombreProfesor"));
+                tableColumn_Periodo.setCellValueFactory(new PropertyValueFactory<>("idPeriodo"));
+                tableColumn_Modalidad.setCellValueFactory(new PropertyValueFactory<>("tipoColaboracion"));
+                tableColumn_Objetivo.setCellValueFactory(new PropertyValueFactory<>("objetivoGeneral"));
+                tableColumn_Idioma.setCellValueFactory(new PropertyValueFactory<>("idioma"));
             } catch (SQLException ex) {
                 Alertas.mostrarMensajeErrorBaseDatos();
                 LOG.error(ex);
@@ -153,5 +174,7 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
         return new PropuestaColaboracionDAO().obtenerListaDeNomnbreProfesorPorIdProfesor();
     }
     
+    private List<List<String>> obtenerListaDeIdiomas() throws SQLException {
+        return new ProfesorDAO().obtenerListaDeIdiomas();
+    }
 }
-    

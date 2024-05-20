@@ -1,5 +1,7 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 public class PropuestaColaboracion {
     private int idPropuestaColaboracion;
     private String tipoColaboracion;
@@ -9,31 +11,15 @@ public class PropuestaColaboracion {
     private int numeroEstudiante;
     private String informacionAdicional;
     private String perfilDeLosEstudiantes;
-    private int Idiomas_idIdiomas;
-    private int Periodo_idPeriodo;
-    private int Profesor_idProfesor;
-    private int Estado_Propuesta_idEstadoPropuesta;
+    private int idIdiomas;
+    private int idPeriodo;
+    private int idProfesor;
+    private String estadoPropuesta;
 
-    public PropuestaColaboracion(int idPropuestaColaboracion, String tipoColaboracion, String nombre, String objetivoGeneral, 
-            String temas, int numeroEstudiante, String informacionAdicional, String perfilDeLosEstudiantes, 
-            int Idiomas_idIdiomas, int Periodo_idPeriodo, int Profesor_idProfesor, int Estado_Propuesta_idEstadoPropuesta) {
-        this.idPropuestaColaboracion = idPropuestaColaboracion;
-        this.tipoColaboracion = tipoColaboracion;
-        this.nombre = nombre;
-        this.objetivoGeneral = objetivoGeneral;
-        this.temas = temas;
-        this.numeroEstudiante = numeroEstudiante;
-        this.informacionAdicional = informacionAdicional;
-        this.perfilDeLosEstudiantes = perfilDeLosEstudiantes;
-        this.Idiomas_idIdiomas = Idiomas_idIdiomas;
-        this.Periodo_idPeriodo = Periodo_idPeriodo;
-        this.Profesor_idProfesor = Profesor_idProfesor;
-        this.Estado_Propuesta_idEstadoPropuesta = Estado_Propuesta_idEstadoPropuesta;
-    }
-
-    public PropuestaColaboracion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    private final static String EXPRESION_REGULAR_NOMBRE = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,200}$";
+    private final static String NUMERO_ESTUDIANTE = "^\\d{1,4}$";
+    private final static String EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$";
+    private final static String EXPRESION_REGULAR_PERFIL_ESTUDIANTE= "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-\\.]{1,45}$";      
 
     public int getIdPropuestaColaboracion() {
         return idPropuestaColaboracion;
@@ -56,7 +42,11 @@ public class PropuestaColaboracion {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre!=null&&Pattern.matches(EXPRESION_REGULAR_NOMBRE, nombre.trim())) {
+            this.nombre = nombre.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getObjetivoGeneral() {
@@ -64,7 +54,11 @@ public class PropuestaColaboracion {
     }
 
     public void setObjetivoGeneral(String objetivoGeneral) {
-        this.objetivoGeneral = objetivoGeneral;
+        if (objetivoGeneral!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, objetivoGeneral.trim())) {
+            this.objetivoGeneral = objetivoGeneral.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getTemas() {
@@ -72,7 +66,11 @@ public class PropuestaColaboracion {
     }
 
     public void setTemas(String temas) {
-        this.temas = temas;
+        if (temas!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, temas.trim())) {
+            this.temas = temas.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public int getNumeroEstudiante() {
@@ -88,7 +86,11 @@ public class PropuestaColaboracion {
     }
 
     public void setInformacionAdicional(String informacionAdicional) {
-        this.informacionAdicional = informacionAdicional;
+        if (informacionAdicional!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, informacionAdicional.trim())) {
+            this.informacionAdicional = informacionAdicional.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getPerfilDeLosEstudiantes() {
@@ -96,61 +98,42 @@ public class PropuestaColaboracion {
     }
 
     public void setPerfilDeLosEstudiantes(String perfilDeLosEstudiantes) {
-        this.perfilDeLosEstudiantes = perfilDeLosEstudiantes;
+        if (perfilDeLosEstudiantes!=null&&Pattern.matches(EXPRESION_REGULAR_PERFIL_ESTUDIANTE, perfilDeLosEstudiantes.trim())) {
+            this.perfilDeLosEstudiantes = perfilDeLosEstudiantes.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
-    public int getIdiomasId() {
-        return Idiomas_idIdiomas;
+    public int getIdIdiomas() {
+        return idIdiomas;
     }
 
-    public void setIdiomasId(int idiomasId) {
-        this.Idiomas_idIdiomas = idiomasId;
+    public void setIdIdiomas(int idIdiomas) {
+        this.idIdiomas = idIdiomas;
     }
 
-    public int getPeriodoId() {
-        return Periodo_idPeriodo;
+    public int getIdPeriodo() {
+        return idPeriodo;
     }
 
-    public void setPeriodoId(int periodoId) {
-        this.Periodo_idPeriodo = periodoId;
+    public void setIdPeriodo(int idPeriodo) {
+        this.idPeriodo = idPeriodo;
     }
 
-    public int getProfesorId() {
-        return Profesor_idProfesor;
+    public int getIdProfesor() {
+        return idProfesor;
     }
 
-    public void setProfesorId(int profesorId) {
-        this.Profesor_idProfesor = profesorId;
+    public void setIdProfesor(int idProfesor) {
+        this.idProfesor = idProfesor;
     }
 
-    public int getEstado_Propuesta_idEstadoPropuesta() {
-        return Estado_Propuesta_idEstadoPropuesta;
+    public String getEstadoPropuesta() {
+        return estadoPropuesta;
     }
 
-    public void setEstado_Propuesta_idEstadoPropuesta(int estado_Propuesta_idEstadoPropuesta) {
-        this.Estado_Propuesta_idEstadoPropuesta = estado_Propuesta_idEstadoPropuesta;
+    public void setEstadoPropuesta(String estadoPropuesta) {
+        this.estadoPropuesta = estadoPropuesta;
     }
-
-    public int getEstadoPropuestaId() {
-        return Estado_Propuesta_idEstadoPropuesta;
-    }
-
-    public String getEstado() {
-    String estado;
-    switch (Estado_Propuesta_idEstadoPropuesta) {
-        case 1:
-            estado = "Aceptado";
-            break;
-        case 2:
-            estado = "Rechazado";
-            break;
-        case 3:
-            estado = "Pendiente";
-            break;
-        default:
-            estado = "Estado desconocido";
-    }
-    return estado;
-}
-
 }

@@ -1,16 +1,18 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 public class Institucion {
     private String claveInstitucional;
     private String nombreInstitucion;
     private String nombrePais;
     private String correo;
 
-    private final static String EXPRESION_REGULAR_CLAVE_INSTITUCIONAL = "^[A-Z0-9]{1,20}$";
-    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[\\p{L}0-9áéíóúÁÉÍÓÚüÜ\\s]{1,200}$";
-    private final static String EXPRESION_REGULAR_NOMBRE_PAIS = "^[\\p{L}0-9áéíóúÁÉÍÓÚüÜ\\s]{1,60}$";
+    private final static String EXPRESION_REGULAR_CLAVE_INSTITUCIONAL = "^[A-Z0-9']{1,20}$";
+    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,200}$";
+    private final static String EXPRESION_REGULAR_NOMBRE_PAIS = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-]{1,60}$";
     private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
-
+private static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
 
     public String getClaveInstitucional() {
@@ -18,10 +20,11 @@ public class Institucion {
     }
 
     public void setClaveInstitucional(String claveInstitucional) {
-        if (!claveInstitucional.matches(EXPRESION_REGULAR_CLAVE_INSTITUCIONAL)) {
-            throw new IllegalArgumentException("La clave institucional es inválida.");
+        if (claveInstitucional!=null&&Pattern.matches(EXPRESION_REGULAR_CLAVE_INSTITUCIONAL, claveInstitucional.trim())) {
+            this.claveInstitucional = claveInstitucional.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
         }
-        this.claveInstitucional = claveInstitucional;
     }
 
     public String getNombreInstitucion() {
@@ -29,10 +32,11 @@ public class Institucion {
     }
 
     public void setNombreInstitucion(String nombreInstitucion) {
-        if (!nombreInstitucion.matches(EXPRESION_REGULAR_NOMBRE_INSTITUCION)) {
-            throw new IllegalArgumentException("El nombre de la institución es inválido.");
-        }
-        this.nombreInstitucion = nombreInstitucion;
+        if (nombreInstitucion!=null&&Pattern.matches(EXPRESION_REGULAR_NOMBRE_INSTITUCION, nombreInstitucion.trim())) {
+            this.nombreInstitucion = nombreInstitucion.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getNombrePais() {
@@ -40,10 +44,11 @@ public class Institucion {
     }
 
     public void setNombrePais(String nombrePais) {
-        if (!nombrePais.matches(EXPRESION_REGULAR_NOMBRE_PAIS)) {
-            throw new IllegalArgumentException("El nombre del país es inválido.");
-        }
-        this.nombrePais = nombrePais;
+        if (nombrePais!=null&&Pattern.matches(EXPRESION_REGULAR_NOMBRE_PAIS,nombrePais.trim())) {
+            this.nombrePais = nombrePais.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getCorreo() {
@@ -51,11 +56,13 @@ public class Institucion {
     }
 
     public void setCorreo(String correo) {
-        if (!correo.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO)) {
+        if (correo!=null&&Pattern.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO, correo.trim())) {
+            this.correo = correo.trim().replaceAll("\\s+", " ");
+        }else{
             throw new IllegalArgumentException();
-        }
-        this.correo = correo;
+        } 
     }
+    
      @Override
     public String toString() {
         return claveInstitucional + " " + nombreInstitucion + " " + nombrePais + " " + correo;

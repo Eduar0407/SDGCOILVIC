@@ -16,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import sdgcoilvic.Utilidades.ImagesSetter;
+import sdgcoilvic.utilidades.ImagesSetter;
 
 public class AdministrarActividadesControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(AdministrarActividadesControlador.class);
@@ -84,7 +84,8 @@ public class AdministrarActividadesControlador implements Initializable{
             sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
         } catch (IOException ex) {
             LOG.error( ex);
-        }}
+        }
+    }
 
     @FXML
     void button_AgregarActividad(ActionEvent event) {

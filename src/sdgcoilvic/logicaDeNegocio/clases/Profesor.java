@@ -1,20 +1,27 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 
 public class Profesor {
+    
     private int idProfesor;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String correo;
-    private String claveInstitucional;
     private int idIdiomas;
-    private int idEstado;
     private int idAcceso;
+    private String estadoProfesor;
+    private String claveInstitucional;
 
-    private final static String EXPRESION_REGULAR = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s]{1,60}$";
-    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
-
+    private final static String EXPRESION_REGULAR = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s'\\-]{1,60}$";
+    private final static String EXPRESION_REGULAR_APELLIDO_MATERNO = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s'\\-]{0,60}$";
+    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9'._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
+    
+    public Profesor() {
+        // Constructor por defecto
+    }
     public int getIdProfesor() {
         return idProfesor;
     }
@@ -28,10 +35,12 @@ public class Profesor {
     }
 
     public void setNombre(String nombre) {
-        if (!nombre.matches(EXPRESION_REGULAR)) {
+        if (nombre!=null&&Pattern.matches(EXPRESION_REGULAR, nombre.trim())) {
+            this.nombre = nombre.trim().replaceAll("\\s+", " ");
+        }else{
             throw new IllegalArgumentException();
-        }
-        this.nombre = nombre;
+        } 
+        
     }
 
     public String getApellidoPaterno() {
@@ -39,10 +48,12 @@ public class Profesor {
     }
 
     public void setApellidoPaterno(String apellidoPaterno) {
-        if (!apellidoPaterno.matches(EXPRESION_REGULAR)) {
+        if (apellidoPaterno!=null&&Pattern.matches(EXPRESION_REGULAR, apellidoPaterno.trim())) {
+            this.apellidoPaterno = apellidoPaterno.trim().replaceAll("\\s+", " ");
+        }else{
             throw new IllegalArgumentException();
         }
-        this.apellidoPaterno = apellidoPaterno;
+        
     }
 
     public String getApellidoMaterno() {
@@ -50,10 +61,11 @@ public class Profesor {
     }
 
     public void setApellidoMaterno(String apellidoMaterno) {
-        if (!apellidoMaterno.matches(EXPRESION_REGULAR)) {
+        if (apellidoMaterno == null || Pattern.matches(EXPRESION_REGULAR_APELLIDO_MATERNO, apellidoMaterno.trim())) {
+            this.apellidoMaterno = apellidoMaterno.trim().replaceAll("\\s+", " ");
+        }else{
             throw new IllegalArgumentException();
         }
-        this.apellidoMaterno = apellidoMaterno;
     }
 
     public String getCorreo() {
@@ -61,18 +73,12 @@ public class Profesor {
     }
 
     public void setCorreo(String correo) {
-        if (!correo.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO)) {
+        
+        if (correo!=null&&Pattern.matches(EXPRESION_REGULAR_CORREO_ELECTRONICO, correo.trim())) {
+            this.correo = correo.trim().replaceAll("\\s+", " ");
+        }else{
             throw new IllegalArgumentException();
         }
-        this.correo = correo;
-    }
-
-    public String getClaveInstitucional() {
-        return claveInstitucional;
-    }
-
-    public void setClaveInstitucional(String claveInstitucional) {
-        this.claveInstitucional = claveInstitucional;
     }
 
     public int getIdIdiomas() {
@@ -83,14 +89,6 @@ public class Profesor {
         this.idIdiomas = idIdiomas;
     }
     
-    public int getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(int idEstado) {
-        this.idEstado = idEstado;
-    }
-    
     public int getIdAcceso() {
         return idAcceso;
     }
@@ -98,7 +96,23 @@ public class Profesor {
     public void setIdAcceso(int idAcceso) {
         this.idAcceso = idAcceso;
     }
+    
+    public String getEstadoProfesor() {
+        return estadoProfesor;
+    }
 
+    public void setEstadoProfesor(String estadoProfesor) {
+        this.estadoProfesor = estadoProfesor;
+    }
+
+    public String getClaveInstitucional() {
+        return claveInstitucional;
+    }
+
+    public void setClaveInstitucional(String claveInstitucional) {
+        this.claveInstitucional = claveInstitucional;
+    }
+    
     @Override
     public String toString() {
         return nombre + " " + apellidoPaterno + " " + apellidoMaterno + " " + correo;
@@ -110,15 +124,15 @@ public class Profesor {
             return false;
         } 
         final Profesor otroProfesor = (Profesor) object;
-        return (this.idProfesor == otroProfesor.idProfesor
-            && this.nombre == null ? otroProfesor.nombre == null : this.nombre.equals(otroProfesor.nombre))
+        return (this.nombre == null ? otroProfesor.nombre == null : this.nombre.equals(otroProfesor.nombre))
             && (this.apellidoPaterno == null ? otroProfesor.apellidoPaterno == null : this.apellidoPaterno.equals(otroProfesor.apellidoPaterno))   
             && (this.apellidoMaterno == null ? otroProfesor.apellidoMaterno == null : this.apellidoMaterno.equals(otroProfesor.apellidoMaterno))  
             && (this.correo == null ? otroProfesor.correo == null : this.correo.equals(otroProfesor.correo))
-            && (this.claveInstitucional == null ? otroProfesor.claveInstitucional == null : this.claveInstitucional.equals(otroProfesor.claveInstitucional))
             && this.idIdiomas == otroProfesor.idIdiomas
-            && this.idEstado == otroProfesor.idEstado
-            && this.idAcceso == otroProfesor.idAcceso;
+            && (this.estadoProfesor == null ? otroProfesor.estadoProfesor == null : this.estadoProfesor.equals(otroProfesor.estadoProfesor)) 
+            && this.idAcceso == otroProfesor.idAcceso
+            && (this.claveInstitucional == null ? otroProfesor.claveInstitucional == null : this.claveInstitucional.equals(otroProfesor.claveInstitucional));
+            
     }
 
 }
