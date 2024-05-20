@@ -12,28 +12,28 @@ import javafx.stage.Stage;
 public class SDGCOILVIC extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDeInstituciones.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/acceso.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);  
         stage.show();    
     } 
     
      public void mostrarVentanaAcceso (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/Acceso.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/Acceso.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
     public void mostrarVentanaAdministrativoMenu(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AdministrativoMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AdministrativoMenu.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
     public void mostrarVentanaGestionDeColaboraciones (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDeColaboraciones.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/GestionDeColaboraciones.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
@@ -41,7 +41,7 @@ public class SDGCOILVIC extends Application {
     
     public void mostrarVentanaEvidenciasDeActividad(Stage stage) throws IOException {
         Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/EvidenciasDeActividad.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/EvidenciasDeActividad.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageAgregar.setScene(scene);
@@ -54,14 +54,14 @@ public class SDGCOILVIC extends Application {
     }
    
     public void mostrarVentanaGestionDeOfertasDeColaboracion (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDeOfertasDeColaboracion.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/GestionDeOfertasDeColaboracion.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
     public void mostrarVentanaGestionDeProfesores (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDeProfesores.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/GestionDeProfesores.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
@@ -69,7 +69,7 @@ public class SDGCOILVIC extends Application {
     
     public void mostrarVentanaAgregarProfesorExterno(Stage stage, Runnable onCloseCallback) throws IOException {
         Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AgregarProfesorExterno.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AgregarProfesorExterno.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageAgregar.setScene(scene);
@@ -84,7 +84,7 @@ public class SDGCOILVIC extends Application {
     
     public void mostrarVentanaAgregarProfesorUV(Stage stage, Runnable onCloseCallback) throws IOException {
         Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AgregarProfesorUV.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AgregarProfesorUV.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageAgregar.setScene(scene);
@@ -97,57 +97,53 @@ public class SDGCOILVIC extends Application {
         stageAgregar.show();
     }
     
-    public void mostrarVentanaModificarProfesorUV(Stage stage) throws IOException {
+    public void mostrarVentanaModificarProfesorUV(Stage stage, Runnable onCloseCallback) throws IOException {
         Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/ModificarProfesorUV.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/ModificarProfesorUV.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageAgregar.setScene(scene);
 
         stageAgregar.initModality(Modality.APPLICATION_MODAL);
         ModificarProfesorUVControlador controller = loader.getController();
+        controller.setOnCloseCallback(onCloseCallback);
         controller.setStage(stage);
 
         stageAgregar.show();
     }
     
-        public void mostrarVentanaModificarProfesorExterno(Stage stage) throws IOException {
+        public void mostrarVentanaModificarProfesorExterno(Stage stage, Runnable onCloseCallback) throws IOException {
         Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/ModificarProfesorExterno.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/ModificarProfesorExterno.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageAgregar.setScene(scene);
 
         stageAgregar.initModality(Modality.APPLICATION_MODAL);
         ModificarProfesorExternoControlador controller = loader.getController();
+        controller.setOnCloseCallback(onCloseCallback);
         controller.setStage(stage);
 
         stageAgregar.show();
     }
     
     public void mostrarVentanaGestionDePropuestasColaboracion (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDePropuestasColaboracion.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/GestionDePropuestasColaboracion.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
     public void mostrarVentanaEvaluarPropuestaDeColaboracion(Stage stage) throws IOException {
-        Stage stageAgregar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/EvaluarPropuestaDeColaboracion.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        stageAgregar.setScene(scene);
-
-        stageAgregar.initModality(Modality.APPLICATION_MODAL);
-        EvaluarPropuestaColaboracionControlador controller = loader.getController();
-        controller.setStage(stage);
-
-        stageAgregar.show();
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/EvaluarPropuestaDeColaboracion.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+        
     }
     
     public void mostrarVentanaGestionDeInstituciones(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/GestionDeInstituciones.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/GestionDeInstituciones.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
@@ -155,7 +151,7 @@ public class SDGCOILVIC extends Application {
     
     public void mostrarVentanaRegistrarInstitucion(Stage stage, Runnable onCloseCallback) throws IOException {
         Stage stageRegistrar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/RegistrarInstitucion.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/RegistrarInstitucion.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageRegistrar.setScene(scene);
@@ -168,28 +164,90 @@ public class SDGCOILVIC extends Application {
     }
     
     public void mostrarVentanaProfesorMenu (Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/ProfesorMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/ProfesorMenu.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
     public void mostrarVentanaAdministrarSolicitudes(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AdministrarSolicitudes.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AdministrarSolicitudes.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
     
-    public void mostrarVentanaAdministrarActividades(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AdministrarActividades.fxml"));
+    public void mostrarVentanaAdministrarColaboracionesDisponibles(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AdministrarColaboracionesDisponibles.fxml"));
         Scene scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
     }
+        
+    public void mostrarVentanaDeclaracionDeProposito(Stage stage) throws IOException {
+        Stage stageRegistrar = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/DeclaracionDeProposito.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stageRegistrar.setScene(scene);
+
+        stageRegistrar.initModality(Modality.APPLICATION_MODAL);
+        DeclaracionDePropositoControlador controller = loader.getController();
+        controller.setStage(stage);
+        stageRegistrar.show();
+    }
+    
+    public void mostrarVentanaAdministrarActividades(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AdministrarActividades.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void mostrarVentanaAdministrarPropuestasDeColaboracion(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AdministrarPropuestasDeColaboracion.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void mostrarVentanaNuevaPropuesta(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/NuevaPropuesta.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void mostrarVentanaActualizarPropuestaPropuesta(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/ActualizarPropuesta.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void mostrarVentanaIniciarColaboracion(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sdgcoilvic/interfazDeUsuario/IniciarColaboracion.fxml"));
+        Scene scene = new Scene (root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void mostrarVentanaAgregarEstudiante(Stage stage) throws IOException {
+        Stage stageRegistrar = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AgregarEstudiante.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stageRegistrar.setScene(scene);
+ 
+       stageRegistrar.initModality(Modality.APPLICATION_MODAL);
+        AgregarEstudianteControlador controller = loader.getController();
+        controller.setStage(stage);
+        stageRegistrar.show();
+    }
+    
     public void mostrarVentanaAgregarActividad(Stage stage) throws IOException {
         Stage stageRegistrar = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/InterfazDeUsuario/AgregarActividad.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sdgcoilvic/interfazDeUsuario/AgregarActividad.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stageRegistrar.setScene(scene);

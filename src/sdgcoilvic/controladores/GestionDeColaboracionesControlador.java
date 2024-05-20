@@ -16,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import sdgcoilvic.Utilidades.ImagesSetter;
+import sdgcoilvic.utilidades.ImagesSetter;
 
 public class GestionDeColaboracionesControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(GestionDeColaboracionesControlador.class);

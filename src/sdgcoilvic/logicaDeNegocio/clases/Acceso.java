@@ -4,7 +4,7 @@ public class Acceso {
     private int idAcceso;
     private String contrasenia;
     private String usuario;
-    private int tipoUsuario;
+    private String tipoUsuario;
 
 
     public int getIdAcceso() {
@@ -31,12 +31,20 @@ public class Acceso {
         this.usuario = usuario;
     }
 
-    public int getTipoUsuario() {
+    public String getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(int tipoUsuario) {
+    public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+    
+        @Override
+    public boolean equals(Object obj){
+        Acceso accesoTemporal = (Acceso)obj;
+        return this.contrasenia.equals(accesoTemporal.getContrasenia())&&
+                this.usuario.equals(accesoTemporal.getUsuario())&&
+                this.tipoUsuario.equals(accesoTemporal.getTipoUsuario()); 
     }
 
 

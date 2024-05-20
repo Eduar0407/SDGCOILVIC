@@ -1,21 +1,21 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
-public class ProfesorUV {
-    private int idProfesorUV;
+import java.util.regex.Pattern;
+
+public class ProfesorUV extends Profesor{
     private String noPersonal;
     private String disciplina;
-    private int idProfesor;
     private int idRegion;
     private int idCategoriaContratacionUV;
     private int idTipoContratacionUV;
     private int idAreaAcademica;
+    private int idProfesorUV;
 
-    public int getIdProfesorUV() {
-        return idProfesorUV;
-    }
-
-    public void setIdProfesorUV(int idProfesorUV) {
-        this.idProfesorUV = idProfesorUV;
+    private final static String EXPRESION_REGULAR_NO_PERSONAL = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\d]{1,20}$";
+    private final static String EXPRESION_REGULAR_DISCIPLINA = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,200}$";
+    
+    public ProfesorUV() {
+        super();
     }
 
     public String getNoPersonal() {
@@ -23,7 +23,11 @@ public class ProfesorUV {
     }
 
     public void setNoPersonal(String noPersonal) {
-        this.noPersonal = noPersonal;
+        if (noPersonal!=null&&Pattern.matches(EXPRESION_REGULAR_NO_PERSONAL, noPersonal.trim())) {
+            this.noPersonal = noPersonal.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public String getDisciplina() {
@@ -31,17 +35,13 @@ public class ProfesorUV {
     }
 
     public void setDisciplina(String disciplina) {
-        this.disciplina = disciplina;
+        if (disciplina!=null&&Pattern.matches(EXPRESION_REGULAR_DISCIPLINA, disciplina.trim())) {
+            this.disciplina = disciplina.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
     
-    public int getIdProfesor() {
-        return idProfesor;
-    }
-
-    public void setIdProfesor(int idProfesor) {
-        this.idProfesor = idProfesor;
-    }
-
     public int getIdRegion() {
         return idRegion;
     }
@@ -73,4 +73,28 @@ public class ProfesorUV {
     public void setIdAreaAcademica(int idAreaAcademica) {
         this.idAreaAcademica = idAreaAcademica;
     }
+    
+    public int getIdProfesorUV() {
+        return idProfesorUV;
+    }
+
+    public void setIdProfesoerUV(int idProfesorUV) {
+        this.idProfesorUV = idProfesorUV;
+    }
+    
+    
+        @Override
+    public boolean equals(Object object) {
+        if ((object == null) || (object.getClass() != this.getClass())) {
+            return false;
+        } 
+        final ProfesorUV otroProfesorUV = (ProfesorUV) object;
+        return (this.noPersonal == null ? otroProfesorUV.noPersonal == null : this.noPersonal.equals(otroProfesorUV.noPersonal))
+            && (this.disciplina == null ? otroProfesorUV.disciplina == null : this.disciplina.equals(otroProfesorUV.disciplina))   
+            && this.idRegion == otroProfesorUV.idRegion
+            && this.idCategoriaContratacionUV == otroProfesorUV.idCategoriaContratacionUV
+            && this.idTipoContratacionUV == otroProfesorUV.idTipoContratacionUV
+            && this.idAreaAcademica == otroProfesorUV.idAreaAcademica;
+    }
+
 }

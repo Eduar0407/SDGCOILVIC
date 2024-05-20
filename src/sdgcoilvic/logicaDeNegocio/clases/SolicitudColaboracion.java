@@ -1,5 +1,7 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 public class SolicitudColaboracion {
     private int idSolicitudColaboracion;
     private String fechaCreacion;
@@ -7,15 +9,9 @@ public class SolicitudColaboracion {
     private int idProfesor;
     private int idEstadoSolicitud;
 
+    private final static String EXPRESION_REGULAR_MENSAJE = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$";
+    
     public SolicitudColaboracion() {
-    }
-
-    public SolicitudColaboracion(int idSolicitudColaboracion, String fechaCreacion, String mensaje, int idProfesor, int idEstadoSolicitud) {
-        this.idSolicitudColaboracion = idSolicitudColaboracion;
-        this.fechaCreacion = fechaCreacion;
-        this.mensaje = mensaje;
-        this.idProfesor = idProfesor;
-        this.idEstadoSolicitud = idEstadoSolicitud;
     }
 
     public int getIdSolicitudColaboracion() {
@@ -39,7 +35,11 @@ public class SolicitudColaboracion {
     }
 
     public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+        if (mensaje!=null&&Pattern.matches(EXPRESION_REGULAR_MENSAJE, mensaje.trim())) {
+            this.mensaje = mensaje.trim().replaceAll("\\s+", " ");
+        }else{
+            throw new IllegalArgumentException();
+        } 
     }
 
     public int getIdProfesor() {
