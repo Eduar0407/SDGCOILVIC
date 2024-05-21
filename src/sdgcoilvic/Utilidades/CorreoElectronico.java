@@ -1,4 +1,4 @@
-package sdgcoilvic.Utilidades;
+package sdgcoilvic.utilidades;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 
 public class CorreoElectronico {
     private static final Logger LOG = Logger.getLogger(CorreoElectronico.class);
-    
+
     public static boolean enviarCorreo(String destinatario, String asunto, String mensaje) {
+        boolean enviadoExitosamente = false;
+
         Properties propiedades = new Properties();
         propiedades.put("mail.smtp.host", "smtp.gmail.com");
         propiedades.put("mail.smtp.auth", "true");
@@ -38,29 +40,31 @@ public class CorreoElectronico {
             transport.sendMessage(mensajeCorreo, mensajeCorreo.getAllRecipients());
             transport.close();
 
-            System.out.println("Correo enviado correctamente");
-            return true;
+            enviadoExitosamente = true;
         } catch (MessagingException e) {
+            enviadoExitosamente = false;
             LOG.info("Error al enviar el correo: " + e);
-            return false;
         }
+
+        return enviadoExitosamente;
     }
+
 
     public static boolean verificarEnvioCorreo(String destinatario, String asunto, String mensaje) {
          boolean correoEnviado = enviarCorreo(destinatario, asunto, mensaje);
          boolean enviadoExitosamente = false;
-         if (!correoEnviado) {
+         if (correoEnviado == false) {
              Alert alert = new Alert(Alert.AlertType.ERROR,
                      "El correo no se pudo enviar. ¿Desea intentarlo de nuevo?",
                      ButtonType.YES, ButtonType.NO);
-             alert.setHeaderText("Error al enviar correo");
+             alert.setHeaderText("Error al enviar correo, verifique su conexion a internet");
              Optional<ButtonType> result = alert.showAndWait();
              if (result.isPresent() && result.get() == ButtonType.YES) {
-                 enviadoExitosamente = verificarEnvioCorreo(destinatario, asunto, mensaje); // Llamada recursiva
-             } 
+                 enviadoExitosamente = verificarEnvioCorreo(destinatario, asunto, mensaje);
+             }else {
+              enviadoExitosamente = false;
+             }  
          } else {
-             Alertas.mostrarMensaje(Alert.AlertType.INFORMATION, "Correo enviado", 
-                 "El correo se envió correctamente");
              enviadoExitosamente = true;
          }
          return enviadoExitosamente;

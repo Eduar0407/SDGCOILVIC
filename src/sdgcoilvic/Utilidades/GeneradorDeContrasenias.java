@@ -1,4 +1,4 @@
-package sdgcoilvic.Utilidades;
+package sdgcoilvic.utilidades;
 
 import java.security.SecureRandom;
 

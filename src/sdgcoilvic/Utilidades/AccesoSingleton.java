@@ -1,8 +1,9 @@
-package sdgcoilvic.Utilidades;
+package sdgcoilvic.utilidades;
 
-public class AccesoSingleton {
+
+public final class AccesoSingleton {
     private static AccesoSingleton instance;
-    private String accesoId;
+    private int accesoId;
 
     private AccesoSingleton() {
         
@@ -16,14 +17,14 @@ public class AccesoSingleton {
     }
     
     public void borrarInstancia() {
-        accesoId = "";
+        accesoId = -1;
     }
 
-    public String getAccesoId() {
+    public int getAccesoId() {
         return accesoId;
     }
 
-    public void setAccesoId(String accesoId) {
+    public void setAccesoId(int accesoId) {
         this.accesoId = accesoId;
     }
 }

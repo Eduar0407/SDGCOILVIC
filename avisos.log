@@ -3892,3 +3892,6 @@ The last packet sent successfully to the server was 0 milliseconds ago. The driv
 [2024-05-20 18:01:20] [ ERROR] [GestionDeProfesoresControlador:241] javafx.fxml.LoadException: 
 /D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/build/classes/sdgcoilvic/interfazDeUsuario/AgregarProfesorUV.fxml:17
 
+[2024-05-20 18:14:48] [ ERROR] [GestionDeProfesoresControlador:241] javafx.fxml.LoadException: 
+/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/build/classes/sdgcoilvic/interfazDeUsuario/AgregarProfesorUV.fxml:17
+

@@ -28,10 +28,13 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TableView fx:id="tableView_Instituciones" layoutX="174.0" layoutY="154.0" prefHeight="370.0" prefWidth="665.0" style="-fx-border-color: #c4ced7;">
+            <TableView fx:id="tableView_Propuestas" layoutX="174.0" layoutY="154.0" prefHeight="370.0" prefWidth="665.0" style="-fx-border-color: #c4ced7;">
                <columns>
-                  <TableColumn fx:id="column_NombrePropuesta" prefWidth="484.0" text="Nombre de la propuesta" />
-                  <TableColumn fx:id="column_Correo" minWidth="0.0" prefWidth="179.0" text="Evaluar" />
+                  <TableColumn fx:id="column_NombrePropuesta" prefWidth="155.0" text="Nombre de la propuesta" />
+                  <TableColumn fx:id="column_Profesor" minWidth="0.0" prefWidth="131.0" text="Profesor" />
+                  <TableColumn fx:id="column_Modalidad" prefWidth="101.0" text="Modalidad" />
+                  <TableColumn fx:id="column_Periodo" prefWidth="181.0" text="Periodo" />
+                  <TableColumn fx:id="column_Evaluar" prefWidth="95.0" text="Evaluar" />
                </columns>
             </TableView>
          </children>
