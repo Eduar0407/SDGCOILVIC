@@ -1,10 +1,10 @@
-package ImplementacionDAO;
+package implementacion;
 
 import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.ActividadColaborativaDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ActividadColaborativaDAO;
 import sdgcoilvic.logicaDeNegocio.clases.ActividadColaborativa;
 
 public class ActividadColaborativaDAOTest {

@@ -1,4 +1,4 @@
-package ImplementacionDAO;
+package implementacion;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.InstitucionDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.InstitucionDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Institucion;
 
 
@@ -17,11 +17,11 @@ public class InstitucionDAOTest {
         System.out.println("registrarInstitucion");
         Institucion institucion = new Institucion();
         InstitucionDAO instancia = new InstitucionDAO();
-        institucion.setClaveInstitucional("09P0SU0175T");
-        institucion.setNombreInstitucion("Instituto Tecnológico y de Estudios "
+        institucion.setClaveInstitucional("330SU0175T");
+        institucion.setNombreInstitucion(" Tecnológico y de Estudios "
                                        + "Superiores de Monterrey CAMPUS SANTA FE");
         institucion.setNombrePais("México");
-        institucion.setCorreo("mexico@gmail.com");
+        institucion.setCorreo("meo@gmail.com");
         int resultadoEsperado = 1;
         int resultadoObtenido = instancia.insertarInstitucion(institucion);
         assertEquals(resultadoEsperado , resultadoObtenido);

@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/controladores/AgregarProfesorExternoControlador.java</file>
-            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/controladores/SDGCOILVIC.java</file>
+            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/controladores/GestionDeProfesoresControlador.java</file>
+            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/controladores/IniciarColaboracionControlador.java</file>
+            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/interfazDeUsuario/AgregarProfesorUV.fxml</file>
+            <file>file:/D:/UNIVERSIDAD%20SEMESTRE%204/Principios%20de%20Construccion/PROYECTO%20FINAL/SDGCOILVIC/src/sdgcoilvic/logicaDeNegocio/implementacionDAO/ProfesorDAO.java</file>
         </group>
     </open-files>
 </project-private>

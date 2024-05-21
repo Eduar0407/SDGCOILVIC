@@ -1,4 +1,4 @@
-package ImplementacionDAO;
+package implementacion;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.PropuestaColaboracionDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
 import sdgcoilvic.logicaDeNegocio.clases.PropuestaColaboracion;
 
 public class PropuestaColaboracionDAOTest {

@@ -1,10 +1,10 @@
-package ImplementacionDAO;
+package implementacion;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import java.util.List;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.ColaboracionDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ColaboracionDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Colaboracion;
 
 public class ColaboracionDAOTest {

@@ -1,4 +1,4 @@
-package ImplementacionDAO;
+package implementacion;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.ImplementacionDAO.EstudianteDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.EstudianteDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Estudiante;
 
 public class EstudianteDAOTest {
