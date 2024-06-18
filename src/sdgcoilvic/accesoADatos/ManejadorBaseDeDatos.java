@@ -68,17 +68,17 @@ public class ManejadorBaseDeDatos {
     }
 
     public static boolean rollback() throws SQLException {
-        boolean isReversed = false;
+        boolean revertir = false;
 
         try {
             if (conexion != null) {
                 conexion.rollback();
             }
-            isReversed = true;
+            revertir = true;
         } catch (SQLException sQLException) {
             throw sQLException;
         }
-        return isReversed;
+        return revertir;
     }
 }
 

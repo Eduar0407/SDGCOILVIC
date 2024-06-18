@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import sdgcoilvic.utilidades.ImagesSetter;
 import java.io.IOException;
 import java.net.URL;
@@ -42,11 +41,11 @@ public class AdministrativoMenuControlador implements Initializable {
     private void cerrarSesion(MouseEvent event) {
         if (Alertas.mostrarConfirmacion("Cerrar Sesión", "¿Seguro que desea cerrar sesión?")) {
             AccesoSingleton.getInstance().borrarInstancia();
-            Stage myStage = (Stage) imageView_Salir.getScene().getWindow();
+            Stage escenario = (Stage) imageView_Salir.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaAcceso(myStage);
+                sdgcoilvic.mostrarVentanaAcceso(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -56,11 +55,11 @@ public class AdministrativoMenuControlador implements Initializable {
     
     @FXML
     private void abrirVentanaPropuestasColaboracion(MouseEvent event) {
-        Stage myStage = (Stage) imageView_PropuestasColaboracion.getScene().getWindow();
+        Stage escenario = (Stage) imageView_PropuestasColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(myStage);
+            sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -68,11 +67,11 @@ public class AdministrativoMenuControlador implements Initializable {
     
     @FXML
     private void abrirVentanaColaboraciones(MouseEvent event) {
-        Stage myStage = (Stage) imageView_Colaboraciones.getScene().getWindow();
+        Stage escenario = (Stage) imageView_Colaboraciones.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaGestionDeColaboraciones(myStage);
+            sdgcoilvic.mostrarVentanaGestionDeColaboraciones(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -80,11 +79,11 @@ public class AdministrativoMenuControlador implements Initializable {
     
     @FXML
     private void abrirVentanaOfertarColaboracion(MouseEvent event) {
-        Stage myStage = (Stage) imageView_OfertarColaboracion.getScene().getWindow();
+        Stage escenario = (Stage) imageView_OfertarColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaGestionDeOfertasDeColaboracion(myStage);
+            sdgcoilvic.mostrarVentanaGestionDeOfertasDeColaboracion(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -93,11 +92,11 @@ public class AdministrativoMenuControlador implements Initializable {
     
     @FXML
     private void abrirVentanaProfesores(MouseEvent event) {
-        Stage myStage = (Stage) imageView_Profesores.getScene().getWindow();
+        Stage escenario = (Stage) imageView_Profesores.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaGestionDeProfesores(myStage);
+            sdgcoilvic.mostrarVentanaGestionDeProfesores(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -105,10 +104,10 @@ public class AdministrativoMenuControlador implements Initializable {
     
     @FXML
     private void abrirVentanaInstituciones(MouseEvent event) {
-        Stage myStage = (Stage) imageView_Instituciones.getScene().getWindow();
+        Stage escenario = (Stage) imageView_Instituciones.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
         try {
-            sdgcoilvic.mostrarVentanaGestionDeInstituciones(myStage);
+            sdgcoilvic.mostrarVentanaGestionDeInstituciones(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -143,4 +142,3 @@ public class AdministrativoMenuControlador implements Initializable {
         ocultarOpciones();
     }
 }
-

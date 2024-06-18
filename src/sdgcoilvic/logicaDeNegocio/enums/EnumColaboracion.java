@@ -2,7 +2,7 @@ package sdgcoilvic.logicaDeNegocio.enums;
 
 
 public enum EnumColaboracion {
-    Activa,
+    EnCurso,
     Cerrada,
     Finalizada
 }

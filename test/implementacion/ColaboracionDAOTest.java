@@ -1,97 +1,269 @@
 package implementacion;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.sql.SQLException;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.implementacionDAO.ColaboracionDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Colaboracion;
+import sdgcoilvic.logicaDeNegocio.clases.PropuestaColaboracion;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ColaboracionDAO;
+
 
 public class ColaboracionDAOTest {
 
     @Test
-    public void testCrearColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
+    public void testCrearColaboracionExitoso() throws SQLException {
         Colaboracion colaboracion = new Colaboracion();
-        colaboracion.setNombreCurso("Curso de prueba 1");
-        colaboracion.setDescripcion("Descripción de prueba");
-        colaboracion.setRecursos("Recursos de prueba");
-        colaboracion.setIdPeriodo(1);
-        colaboracion.setAprendizajesEsperados("Aprendizajes esperados de prueba");
-        colaboracion.setDetallesAsistenciaParticipacion("Detalles de asistencia y participación de prueba");
-        colaboracion.setDetallesEvaluacion("Detalles de evaluación de prueba");
-        colaboracion.setDetallesEntorno("Detalles de entorno de prueba");
-        colaboracion.setIdEstadoColaboracion(1);
-        colaboracion.setIdCalendarioActividades(1);
-        colaboracion.setIdPropuestaColaboracion(1);
-        int resultado = dao.crearColaboracion(colaboracion);
-        assertEquals(1, resultado);
-    }
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
 
-    @Test
-    public void testFinalizarColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        int idColaboracion = 1; // ID de colaboración existente
-        int resultado = dao.finalizarColaboracion(idColaboracion);
-        assertEquals(1, resultado);
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
     }
-
-    @Test
-    public void testCerrarColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        int idColaboracion = 1; // ID de colaboración existente
-        int resultado = dao.cerrarColaboracion(idColaboracion);
-        assertEquals(1, resultado);
-    }
-
-    @Test
-    public void testIniciarColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        int idColaboracion = 1; // ID de colaboración existente
-        int resultado = dao.iniciarColaboracion(idColaboracion);
-        assertEquals(1, resultado);
-    }
-
-    @Test
-    public void testModificarColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionDescripcionInvalida() throws SQLException {
         Colaboracion colaboracion = new Colaboracion();
-        colaboracion.setIdColaboracion(1); // ID de colaboración existente
-        colaboracion.setNombreCurso("Curso modificado");
-        colaboracion.setDescripcion("Descripción modificada");
-        colaboracion.setRecursos("Recursos modificados");
-        colaboracion.setIdPeriodo(1);
-        colaboracion.setAprendizajesEsperados("Aprendizajes esperados modificados");
-        colaboracion.setDetallesAsistenciaParticipacion("Detalles de asistencia y participación modificados");
-        colaboracion.setDetallesEvaluacion("Detalles de evaluación modificados");
-        colaboracion.setDetallesEntorno("Detalles de entorno modificados");
-        colaboracion.setIdEstadoColaboracion(1);
-        colaboracion.setIdCalendarioActividades(1);
-        colaboracion.setIdPropuestaColaboracion(1);
-        int resultado = dao.modificarColaboracion(colaboracion);
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("/*Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionDescripcionNula() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionRecursosInvalidos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("/*Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionRecursosNulos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionAprendizajesInvalidos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("/*Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionAprendizajesNulos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionAsistenciaInvalida() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("/*Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionAsistenciaNula() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionEvaluacionInvalida() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("/*Examenes periodicos");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionEvaluacionNula() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("");
+        colaboracion.setDetallesEntorno("Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionDetallesInvalidos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("/*Aulas virtuales");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCrearColaboracionDetallesNulos() throws SQLException {
+        Colaboracion colaboracion = new Colaboracion();
+        colaboracion.setIdPropuestaColaboracion(1); 
+        colaboracion.setDescripcion("Proyecto de Investigacion");
+        colaboracion.setRecursos("Conexión a internet");
+        colaboracion.setAprendizajesEsperados("Desarrollar nuevas tecnicas de IA");
+        colaboracion.setDetallesAsistenciaParticipacion("Estudiantes de ultimo año de ingenieria");
+        colaboracion.setDetallesEvaluacion("Examenes periodicos");
+        colaboracion.setDetallesEntorno("");        
+        int idProfesor = 1;
+
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+        assert(idColaboracion > -1);
+    }
+    
+    @Test
+    public void testObtenerNombreProfesores() throws SQLException {
+        int idColaboracion = 1; 
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        List<String> nombresProfesores = colaboracionDAO.obtenerNombreProfesores(idColaboracion);
+        assertEquals(1, nombresProfesores.size());
+        assertEquals("Erick Atzin Olarte", nombresProfesores.get(0));
+    }
+    
+    @Test
+    public void testObtenerIdColaboracionEnCurso() throws SQLException {
+        int idProfesor = 1; 
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracion = colaboracionDAO.obtenerIdColaboracionEnCurso(idProfesor);
+        assertEquals(1, idColaboracion); 
+    }
+    
+    @Test
+    public void testObtenerPropuestaColaboracion() throws SQLException {
+        int idColaboracion = 1; 
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        PropuestaColaboracion propuesta = colaboracionDAO.obtenerPropuestaColaboracion(idColaboracion);
+        assertEquals("AcInvestigación", propuesta.getTipoColaboracion());
+        assertEquals("AcProyecto de Investigación", propuesta.getNombre());
+        assertEquals("AcDesarrollar nuevas técnicas de IA", propuesta.getObjetivoGeneral());
+    }
+   
+    
+    @Test
+    public void testFinalizarColaboracion() throws SQLException {
+        int idColaboracion = 1; 
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int resultado = colaboracionDAO.finalizarColaboracion(idColaboracion);
         assertEquals(1, resultado);
-    }
-
-    @Test
-    public void testConsultarColaboracion() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        int idColaboracion = 1; // ID de colaboración existente
-        Colaboracion colaboracion = dao.consultarColaboracion(idColaboracion);
-        assertNotNull(colaboracion);
-    }
-
-    @Test
-    public void testConsultarTodasColaboraciones() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        List<Colaboracion> colaboraciones = dao.consultarTodasColaboraciones();
-        assertNotNull(colaboraciones);
-    }
-
-    @Test
-    public void testFiltrarColaboraciones() {
-        ColaboracionDAO dao = new ColaboracionDAO();
-        String filtro = "prueba"; // Filtro de búsqueda
-        List<Colaboracion> colaboraciones = dao.filtrarColaboraciones(filtro);
-        assertNotNull(colaboraciones);
     }
 }

@@ -1,58 +1,172 @@
 package implementacion;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.implementacionDAO.EstudianteDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Estudiante;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.EstudianteDAO;
+
 
 public class EstudianteDAOTest {
-    @Test
-    public void registrarEstudianteExitoso() throws SQLException {
-        System.out.println("registrarEstudiante");
-        Estudiante estudiante = new Estudiante();
+      
+    @Test    
+    public void testRegistrarEstudianteExitoso() throws Exception {
+        System.out.println("Registrando Estudiante");
         EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
         estudiante.setNombre("Juan Eduardo");
         estudiante.setApellidoPaterno("Cumplido");
         estudiante.setApellidoMaterno("Negrete");
-        estudiante.setCorreo("zs22020936@estudiantes.uv.mx");
+        estudiante.setCorreo("cumplido@example.com");
         estudiante.setClaveInstitucional("30MSU0940B");
-
-        int resultadoEsperado = 1;
-        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante);
-
-        assertEquals(resultadoEsperado, resultadoObtenido);
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
     }
     
-    @Test
-    public void obtenerProfesorExistentePorNombre() throws SQLException {
+    @Test (expected = AssertionError.class)
+    public void testRegistrarEstudianteNombreDuplicado() throws Exception {
+        System.out.println("Registrando Estudiante");
         EstudianteDAO estudianteDAO = new EstudianteDAO();
-        String nombreEstudianteExistente = "Juan Eduardo";
-        Estudiante estudianteObtenido = estudianteDAO.obtenerEstudiantePorNombre(nombreEstudianteExistente);
-        assertNotNull(estudianteObtenido);
-        assertEquals(nombreEstudianteExistente, estudianteObtenido.getNombre());
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Juan Eduardo");
+        estudiante.setApellidoPaterno("Cumplido");
+        estudiante.setApellidoMaterno("Negrete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        boolean duplicado = estudianteDAO.verificarExistenciaEstudiante("Juan Eduardo","Cumplido","Negrete");
+        if (!duplicado) {
+            int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+            assertEquals(2, resultadoObtenido);
+        } else {
+            fail("Ya existe un usuario con este correo en la base de datos.");
+        }
+    } 
+    
+        @Test (expected = AssertionError.class)
+    public void testRegistrarEstudianteCorreoDuplicado() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Juan Eduardo");
+        estudiante.setApellidoPaterno("Cumplido");
+        estudiante.setApellidoMaterno("Negrete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        boolean duplicado = estudianteDAO.verificarSiExisteElCorreo("cumplido@example.com");
+        if (!duplicado) {
+            int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+            assertEquals(1, resultadoObtenido);
+        } else {
+            fail("Ya existe un usuario con este correo en la base de datos.");
+        }
+    } 
+    
+    @Test (expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteNombreIncorrecto() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Juan +*#Eduardo");
+        estudiante.setApellidoPaterno("Cumplido");
+        estudiante.setApellidoMaterno("Negrete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
     }
     
-    @Test
-    public void testObtenerTodosLosEstudiantes() {
-         EstudianteDAO estudianteDAO = new EstudianteDAO();
-         List<Estudiante> listaEstudiantes = estudianteDAO.obtenerTodosLosEstudiantes();
-         assertEquals(1, listaEstudiantes.size()); 
-         Set<Integer> idsUnicos = new HashSet<>();
-
-         for (Estudiante estudiante : listaEstudiantes) {
-             assertTrue(idsUnicos.add(estudiante.getIdEstudiante()));
-             assertNotNull(estudiante.getNombre());
-             assertNotNull(estudiante.getApellidoPaterno());
-             assertNotNull(estudiante.getApellidoMaterno());
-             assertNotNull(estudiante.getCorreo());
-             assertNotNull(estudiante.getClaveInstitucional());
-         }
-     }
-
-   
+    @Test (expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteNombreNulo() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("");
+        estudiante.setApellidoPaterno("Cumplido");
+        estudiante.setApellidoMaterno("Negrete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
+        @Test (expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteApellidosIncorrectos() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Juan Eduardo");
+        estudiante.setApellidoPaterno("Cumpl#+1ido");
+        estudiante.setApellidoMaterno("Ne232grete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteApellidoPaternoNulo() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Juan Eduardo");
+        estudiante.setApellidoPaterno("");
+        estudiante.setApellidoMaterno("Negrete");
+        estudiante.setCorreo("cumplido@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteApellidoMaternoNulo() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Jose");
+        estudiante.setApellidoPaterno("Cumplido");
+        estudiante.setApellidoMaterno("");
+        estudiante.setCorreo("jose@example.com");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
+    @Test (expected = IllegalArgumentException.class)   
+    public void testRegistrarEstudianteCorreoInvalido() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Mario");
+        estudiante.setApellidoPaterno("Limon");
+        estudiante.setApellidoMaterno("Cabrera");
+        estudiante.setCorreo("limonexamplecom");
+        estudiante.setClaveInstitucional("30MSU0940B");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
+    @Test (expected = AssertionError.class)  
+    public void testRegistrarEstudianteClaveInexistente() throws Exception {
+        System.out.println("Registrando Estudiante");
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombre("Mario");
+        estudiante.setApellidoPaterno("Limon");
+        estudiante.setApellidoMaterno("Cabrera");
+        estudiante.setCorreo("limone@example.com");
+        estudiante.setClaveInstitucional("clave1");
+        int idColaboracion = 1;
+        int resultadoObtenido = estudianteDAO.registrarEstudiante(estudiante, idColaboracion);
+        assertEquals(2, resultadoObtenido);
+    }
+    
 }

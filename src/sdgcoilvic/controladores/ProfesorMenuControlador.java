@@ -4,19 +4,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import java.sql.SQLException;
+import java.util.logging.Level;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import sdgcoilvic.logicaDeNegocio.clases.Profesor;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.AccesoDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
 import sdgcoilvic.utilidades.AccesoSingleton;
 import sdgcoilvic.utilidades.Alertas;
+import sdgcoilvic.utilidades.ColaboracionEnCursoSinglenton;
 import sdgcoilvic.utilidades.ImagesSetter;
 
 public class ProfesorMenuControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(ProfesorMenuControlador.class);
-
+    
+    @FXML 
+    private Label label_NombreProfesor;
     @FXML
     private ImageView imageSalir;
     @FXML
@@ -34,17 +43,32 @@ public class ProfesorMenuControlador implements Initializable{
     
     private void mostrarImagen() {
         imageMenuProfesor.setImage(ImagesSetter.getImageMenuProfesor());
+        mostrarNombreProfesor();
+    }
+    
+    private void mostrarNombreProfesor(){
+        AccesoDAO accesoDAO = new AccesoDAO();
+        int idProfesor = AccesoSingleton.getInstance().getAccesoId();
+        try {
+            Profesor profesor = accesoDAO.obtenerProfesorPorID(idProfesor);
+             label_NombreProfesor.setText(profesor.getNombre() +" "+ profesor.getApellidoPaterno() +" "+ profesor.getApellidoMaterno());
+        }catch (SQLException sqlException ) {
+            Alertas.mostrarMensajeErrorBaseDatos();
+            LOG.fatal("No hay conexión con la base de datos :" +this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
+            
+        }
     }
    
     @FXML
     private void cerrarSesion(MouseEvent event) {
         if (Alertas.mostrarConfirmacion("Cerrar Sesión", "¿Seguro que desea cerrar sesión?")) {
             AccesoSingleton.getInstance().borrarInstancia();
-            Stage myStage = (Stage) imageSalir.getScene().getWindow();
+            ColaboracionEnCursoSinglenton.getInstance().destruirColaboracionEnCursoSinglenton();
+            Stage escenario = (Stage) imageSalir.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaAcceso(myStage);
+                sdgcoilvic.mostrarVentanaAcceso(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -53,54 +77,89 @@ public class ProfesorMenuControlador implements Initializable{
     
     @FXML
     private void imageColaboracion(MouseEvent event) {
-  
+        int idColaboracionEnCurso = ColaboracionEnCursoSinglenton.getInstance().getIdColaboracionEnCurso();
+            
+        if(idColaboracionEnCurso>=1){
+            Stage escenario = (Stage) imageColaboracion.getScene().getWindow();
+            SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+
+            try {
+                sdgcoilvic.mostrarVentanaAdministrarColaboracionActiva(escenario);
+            } catch (IOException ex) {
+                Alertas.mostrarMensajeErrorCambioPantalla();
+                LOG.error( ex);
+            }
+        }else{
+           Alertas.mostrarMensajeNoHayColaboracionEnCurso(); 
+        }
     }
     
     @FXML
     private void imageOfertasDeColaboracion(MouseEvent event) {
-          Stage myStage = (Stage) imagePropuestasColaboracion.getScene().getWindow();
+        Stage escenario = (Stage) imageOfertasDeColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaAdministrarColaboracionesDisponibles(myStage);
+            sdgcoilvic.mostrarVentanaAdministrarColaboracionesDisponibles(escenario);
         } catch (IOException ex) {
+            Alertas.mostrarMensajeErrorCambioPantalla();
             LOG.error( ex);
         }
     }
     
     @FXML
     private void imagePropuestasColaboracion(MouseEvent event) {
-        Stage myStage = (Stage) imagePropuestasColaboracion.getScene().getWindow();
+        Stage escenario = (Stage) imagePropuestasColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-
-        try {
-            sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
-        } catch (IOException ex) {
-            LOG.error( ex);
+        int idColaboracionEnCurso = ColaboracionEnCursoSinglenton.getInstance().getIdColaboracionEnCurso();
+            
+        if(idColaboracionEnCurso>=1){
+            Alertas.mostrarMensajeColaboracionEnCurso(); 
+        }else{
+            try {
+                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
+            } catch (IOException ex) {
+                Alertas.mostrarMensajeErrorCambioPantalla();
+                LOG.error( ex);
+            }
         }
     }
     
     @FXML
     private void imageActividadesColaboracion(MouseEvent event) {
-        Stage myStage = (Stage) imageActividadesColaboracion.getScene().getWindow();
+        Stage escenario = (Stage) imageActividadesColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaAdministrarActividades(myStage);
+            sdgcoilvic.mostrarVentanaAdministrarActividades(escenario);
         } catch (IOException ex) {
+            Alertas.mostrarMensajeErrorCambioPantalla();
             LOG.error( ex);
         }
     }
     
     @FXML
     private void imageSolicitudesColaboracion(MouseEvent event) {
-        Stage myStage = (Stage) imageSolicitudesColaboracion.getScene().getWindow();
+        
+        Stage escenario = (Stage) imageSolicitudesColaboracion.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-
+        PropuestaColaboracionDAO propuestaColaboracioDAO = new PropuestaColaboracionDAO();
+        int idProfesor =  AccesoSingleton.getInstance().getAccesoId();
+        boolean verificar = false;
         try {
-            sdgcoilvic.mostrarVentanaAdministrarSolicitudes(myStage);
-        } catch (IOException ex) {
-            LOG.error( ex);
+            verificar = propuestaColaboracioDAO.verificarEstadoPropuestaColaboracion(idProfesor);
+        } catch (SQLException ex) {
+            java.util.logging.Logger.getLogger(ProfesorMenuControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(verificar){
+            try {
+                sdgcoilvic.mostrarVentanaAdministrarSolicitudes(escenario);
+            } catch (IOException ex) {
+                Alertas.mostrarMensajeErrorCambioPantalla();
+                LOG.error( ex);
+            }
+        }else{
+           Alertas.mostrarMensajeNoHayColaboracionOfertda(); 
         }
     }
    

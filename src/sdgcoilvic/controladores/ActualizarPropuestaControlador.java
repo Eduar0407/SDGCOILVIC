@@ -30,7 +30,7 @@ import sdgcoilvic.utilidades.ImagesSetter;
 
 public class ActualizarPropuestaControlador implements Initializable {
     private static final Logger LOG= Logger.getLogger(NuevaPropuestaControlador.class);
-    private Stage stage;
+    private Stage escenario;
     public static  int idPropuestaColaboracion;
     
     @FXML private Button button_Cancelar;
@@ -68,8 +68,8 @@ public class ActualizarPropuestaControlador implements Initializable {
         textArea.setTextFormatter(new TextFormatter<>(filtro));
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }    
     
     @Override
@@ -89,8 +89,8 @@ public class ActualizarPropuestaControlador implements Initializable {
        } catch (Exception ex) {
           LOG.fatal(ex);
            Alertas.mostrarMensajeErrorBaseDatos();
-           Stage stage = (Stage) button_Cancelar.getScene().getWindow(); 
-           stage.close(); 
+           Stage escenario = (Stage) button_Cancelar.getScene().getWindow(); 
+           escenario.close(); 
        }
     }
     
@@ -100,9 +100,9 @@ public class ActualizarPropuestaControlador implements Initializable {
     }
 
     private void asignarTipoColaboracionAlSeleccionar(PropuestaColaboracion propuesta) {
-        comboBox_TipoColaboracion.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                propuesta.setTipoColaboracion(newValue);
+        comboBox_TipoColaboracion.getSelectionModel().selectedItemProperty().addListener((observable, valorAntiguo, valorNuevo) -> {
+            if (valorNuevo != null) {
+                propuesta.setTipoColaboracion(valorNuevo);
             }
         });
         String primerValor = comboBox_TipoColaboracion.getItems().get(0);
@@ -157,11 +157,11 @@ public class ActualizarPropuestaControlador implements Initializable {
      @FXML
     void cancelarPropuesta(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -194,10 +194,10 @@ public class ActualizarPropuestaControlador implements Initializable {
             PropuestaColaboracion propuestaColaboracion = crearPropuesta();
             if (actualizarPropuesta(propuestaColaboracion) == true) {
                 Alertas.mostrarMensajeExito();
-                 Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+                 Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
                 SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
                 try {
-                    sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+                    sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
                 } catch (IOException ex) {
                     LOG.error( ex);
                 }
@@ -282,7 +282,7 @@ public class ActualizarPropuestaControlador implements Initializable {
                 propuestaColaboracion.setTemas(txtArea_Temas.getText());
                 propuestaColaboracion.setInformacionAdicional(txtArea_Informacion.getText());
                 propuestaColaboracion.setObjetivoGeneral(txtArea_Objetivo.getText());
-            } catch (IllegalArgumentException coreoException) {
+            } catch (IllegalArgumentException illegalArgument) {
                 Alertas.mostrarMensajeInformacionInvalida();
                 validacion = false;
             }

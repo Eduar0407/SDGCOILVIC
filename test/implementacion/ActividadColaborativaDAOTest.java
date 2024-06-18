@@ -1,52 +1,266 @@
 package implementacion;
 
-import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import sdgcoilvic.logicaDeNegocio.implementacionDAO.ActividadColaborativaDAO;
+import java.sql.SQLException;
+import java.util.List;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import sdgcoilvic.logicaDeNegocio.clases.ActividadColaborativa;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ActividadColaborativaDAO;
+
 
 public class ActividadColaborativaDAOTest {
+
     @Test
-    public void agregarActividadColaborativaExitosa() throws SQLException {
-        System.out.println("agregarActividadColaborativaExitosa");
+    public void testAgregarActividadColaborativa() throws SQLException {
         ActividadColaborativa actividad = new ActividadColaborativa();
-        ActividadColaborativaDAO instancia = new ActividadColaborativaDAO();
-        actividad.setNombreActividad("Actividad de prueba");
-        actividad.setDescripcion("Descripción de la actividad de prueba");
-        actividad.setPuntaje(10);
-        actividad.setIdCalendarioActividades(1); 
-
-        int resultadoEsperado = 1;
-        int resultadoObtenido = instancia.agregarActividadColaborativa(actividad);
-
-        assertEquals(resultadoEsperado, resultadoObtenido);
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaNombreInvalido() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("*/Primera actividad");
+        actividad.setInstruccion("Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaNombreNulo() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("");
+        actividad.setInstruccion("Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaInstruccionInvalida() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("*/Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaInstruccionNula() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaHerramientaInvalida() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("*/Internet");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAgregarActividadColaborativaHerramientaNula() throws SQLException {
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Analise correctamente las instrucciones");
+        actividad.setIdColaboracion(1);
+        actividad.setFechaInicio("2024-06-01");
+        actividad.setFechaCierre("2024-11-01");
+        actividad.setHerramienta("");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        ActividadColaborativaDAO dao = new ActividadColaborativaDAO();
+        int resultado = dao.agregarActividadColaborativa(actividad);
+        assertEquals(1, resultado);
     }
     
     @Test
-    public void modificarActividadColaborativaExistente() throws SQLException {
+    public void testActualizarInformacionDeLaActividad() throws SQLException {
         ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
         ActividadColaborativa actividad = new ActividadColaborativa();
-        actividad.setIdActividadColaborativa(1); 
-        actividad.setNombreActividad("Nueva actividad modificada");
-        actividad.setDescripcion("Nueva descripción modificada");
-        actividad.setPuntaje(15);
-
-        int resultadoEsperado = 1;
-        int resultadoObtenido = actividadDAO.modificarActividadColaborativa(actividad, actividad.getIdActividadColaborativa());
-
-        assertEquals(resultadoEsperado, resultadoObtenido);
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadNombreInvalido() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("*/Primera actividad");
+        actividad.setInstruccion("Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadNombreNulo() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("");
+        actividad.setInstruccion("Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadInstruccionInvalida() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("*/Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadInstruccionNula() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadHerramientaInvalida() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("*/Herramienta");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testActualizarInformacionDeLaActividadHerramientaNula() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        ActividadColaborativa actividad = new ActividadColaborativa();
+        actividad.setNombreActividad("Primera actividad");
+        actividad.setInstruccion("Instrucción");
+        actividad.setFechaInicio("2024-05-01");
+        actividad.setFechaCierre("2024-12-01");
+        actividad.setHerramienta("");
+        actividad.setEstadoActividad("Activa");
+        actividad.setIdProfesor(1);
+        int idActividad = 1;
+        int columnasAfectadas = actividadDAO.actualizarInformacionDeLaActividad(actividad, idActividad);
+        assertTrue(columnasAfectadas > 0);
     }
     
     @Test
-    public void consultarActividadColaborativaExistente() throws SQLException {
+    public void testConsultarActividadColaborativa() throws SQLException {
         ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
-        int idActividadExistente = 1; 
-
-        ActividadColaborativa actividadObtenida = actividadDAO.consultarActividadColaborativa(idActividadExistente);
-
-        assertNotNull(actividadObtenida);
-        assertEquals(idActividadExistente, actividadObtenida.getIdActividadColaborativa());
+        int idActividad = 1;
+        ActividadColaborativa actividad = actividadDAO.consultarActividadColaborativa(idActividad);
+        assertNotNull(actividad);
+        assertEquals(1, actividad.getIdActividadColaborativa());
+        assertEquals("Primera actividad", actividad.getNombreActividad());
+        assertEquals("Instrucción", actividad.getInstruccion());
+        assertEquals(1, actividad.getIdColaboracion());
+        assertEquals("2024-05-01", actividad.getFechaInicio());
+        assertEquals("2024-12-01", actividad.getFechaCierre());
+        assertEquals("Herramienta", actividad.getHerramienta());
+        assertEquals("Activa", actividad.getEstadoActividad());
+        assertEquals(1, actividad.getIdProfesor());
     }
+
+    
+    @Test
+    public void testVerificarDuenioActividad() throws SQLException {
+        ActividadColaborativaDAO actividadDAO = new ActividadColaborativaDAO();
+        int idProfesor = 1;
+        List<Integer> listaDeActividades = actividadDAO.verificarDuenioActividad(idProfesor);
+        assertNotNull(listaDeActividades);
+        assertEquals(true, listaDeActividades.size() > 0);
+    }
+    
 }

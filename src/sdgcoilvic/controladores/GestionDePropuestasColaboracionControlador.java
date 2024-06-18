@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -37,7 +36,7 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
     @FXML private TableColumn<TablaPropuestasColaboracion, String> column_Modalidad;
     @FXML private TableColumn<TablaPropuestasColaboracion, String> column_Periodo;
     @FXML private TableColumn<TablaPropuestasColaboracion, Void> column_Evaluar;
-    
+    @FXML private ImageView imageView_noHayPropuestas;  
     @FXML private ImageView imageView_SubMenu;  
     private void mostrarImagen() {
         imageView_SubMenu.setImage(ImagesSetter.getImageSubMenu());
@@ -45,11 +44,11 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
     
     @FXML
     void button_Regresar(ActionEvent event) {
-       Stage myStage = (Stage) button_Regresar.getScene().getWindow();
+       Stage escenario = (Stage) button_Regresar.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaAdministrativoMenu(myStage);
+            sdgcoilvic.mostrarVentanaAdministrativoMenu(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -66,9 +65,9 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
                     TablaPropuestasColaboracion data = getTableView().getItems().get(getIndex());                                                                     
                     try {                     
                         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                        Stage stage = (Stage) button_Evaluar.getScene().getWindow();
+                        Stage escenario = (Stage) button_Evaluar.getScene().getWindow();
                         EvaluarPropuestaColaboracionControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
-                        sdgcoilvic.mostrarVentanaEvaluarPropuestaDeColaboracion(stage );
+                        sdgcoilvic.mostrarVentanaEvaluarPropuestaDeColaboracion(escenario );
                     } catch (IOException ioexception) {
                         LOG.error(ioexception.getMessage());
                         Alertas.mostrarMensajeErrorCambioPantalla();
@@ -92,58 +91,66 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
         List<PropuestaColaboracion> propuestasLista = null;
         List<List<String>> listaPeriodos = null;
         List<List<String>> listaNombresProfesores = null;
-        try {
+            try {
             lista.clear();
             listaPeriodos = obtenerListaDePeriodo();
             listaNombresProfesores = obtenerListDeNombresProfesores();
             propuestasLista = propuestaColaboracionDAO.consultarTodasLasPropuestasColaboracionEnEspera();
-            for (PropuestaColaboracion propuestaColaboracion : propuestasLista) {
-                String periodoInfo = "";
-                for (List<String> periodo : listaPeriodos) {
-                    int id = Integer.parseInt(periodo.get(0));
-                    if (id == propuestaColaboracion.getIdPeriodo()) {
-                        String nombrePeriodo = periodo.get(1);
-                        LocalDate fechaInicio = LocalDate.parse(periodo.get(2)); 
-                        LocalDate fechaFin = LocalDate.parse(periodo.get(3)); 
-                        periodoInfo = nombrePeriodo + " (" + fechaInicio + " - " + fechaFin + ")";
-                        break;
-                    }
-                }
-                
-                String nombreCompleto = "";
-                for (List<String> profesor : listaNombresProfesores) {
-                    int id = Integer.parseInt(profesor.get(0));
-                    if (id == propuestaColaboracion.getIdProfesor()) {
-                        String nombreProfesor = profesor.get(1);
-                        nombreCompleto = nombreProfesor ;
-                        break;
-                    }
-                }
-                
-                lista.add(new TablaPropuestasColaboracion(
-                        propuestaColaboracion.getIdPropuestaColaboracion(),
-                        propuestaColaboracion.getTipoColaboracion(),
-                        propuestaColaboracion.getNombre(),
-                        propuestaColaboracion.getObjetivoGeneral(),
-                        propuestaColaboracion.getTemas(),
-                        periodoInfo,
-                        propuestaColaboracion.getEstadoPropuesta(),
-                        nombreCompleto,
-                        String.valueOf(propuestaColaboracion.getIdIdiomas())
-                ));
-
-            }
-
-            tableView_Propuestas.setItems(lista);
-            column_NombrePropuesta.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            column_Periodo.setCellValueFactory(new PropertyValueFactory<>("idPeriodo"));
-            column_Profesor.setCellValueFactory(new PropertyValueFactory<>("nombreProfesor"));
-            column_Modalidad.setCellValueFactory(new PropertyValueFactory<>("tipoColaboracion"));
+            
             } catch (SQLException ex) {
                 Alertas.mostrarMensajeErrorBaseDatos();
                 LOG.error(ex);
             }
+            if (propuestasLista == null || propuestasLista.isEmpty()) {
+                imageView_noHayPropuestas.setVisible(true);
+            }else  {
+                imageView_noHayPropuestas.setVisible(false);
+                if (listaPeriodos != null && listaNombresProfesores != null) {
+                for (PropuestaColaboracion propuestaColaboracion : propuestasLista) {
+                    String periodoInfo = "";
+                    for (List<String> periodo : listaPeriodos) {
+                        int id = Integer.parseInt(periodo.get(0));
+                        if (id == propuestaColaboracion.getIdPeriodo()) {
+                            String nombrePeriodo = periodo.get(1);
+                            LocalDate fechaInicio = LocalDate.parse(periodo.get(2)); 
+                            LocalDate fechaFin = LocalDate.parse(periodo.get(3)); 
+                            periodoInfo = nombrePeriodo + " (" + fechaInicio + " - " + fechaFin + ")";
+                            break;
+                        }
+                    }
+
+                    String nombreCompleto = "";
+                    for (List<String> profesor : listaNombresProfesores) {
+                        int id = Integer.parseInt(profesor.get(0));
+                        if (id == propuestaColaboracion.getIdProfesor()) {
+                            String nombreProfesor = profesor.get(1);
+                            nombreCompleto = nombreProfesor ;
+                            break;
+                        }
+                    }
+
+                    lista.add(new TablaPropuestasColaboracion(
+                            propuestaColaboracion.getIdPropuestaColaboracion(),
+                            propuestaColaboracion.getTipoColaboracion(),
+                            propuestaColaboracion.getNombre(),
+                            propuestaColaboracion.getObjetivoGeneral(),
+                            propuestaColaboracion.getTemas(),
+                            periodoInfo,
+                            propuestaColaboracion.getEstadoPropuesta(),
+                            nombreCompleto,
+                            String.valueOf(propuestaColaboracion.getIdIdiomas())
+                    ));
+                }
+
+                tableView_Propuestas.setItems(lista);
+                column_NombrePropuesta.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+                column_Periodo.setCellValueFactory(new PropertyValueFactory<>("idPeriodo"));
+                column_Profesor.setCellValueFactory(new PropertyValueFactory<>("nombreProfesor"));
+                column_Modalidad.setCellValueFactory(new PropertyValueFactory<>("tipoColaboracion"));
+    
+            }
         }
+    }
 
     private List<List<String>> obtenerListaDePeriodo() throws SQLException {
         return new PeriodoDAO().obtenerListaDePeriodos();
@@ -154,4 +161,3 @@ public class GestionDePropuestasColaboracionControlador implements Initializable
     }
     
 }
-    

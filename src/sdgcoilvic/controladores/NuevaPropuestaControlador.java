@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import java.sql.SQLException;
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +30,7 @@ import sdgcoilvic.utilidades.ImagesSetter;
 
 public class NuevaPropuestaControlador implements Initializable{
     private static final Logger LOG= Logger.getLogger(NuevaPropuestaControlador.class);
-    private Stage stage;
+    private Stage escenario;
     private AccesoSingleton accesoSingleton;
     @FXML private Button button_Cancelar;
     @FXML private Button button_Someter;
@@ -79,10 +78,9 @@ public class NuevaPropuestaControlador implements Initializable{
            llenarComboBoxPerdiodo();
            llenarComboBoxTipoColaboracion();
            aplicarValidacion(textField_Nombre,  "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,200}$");
-           aplicarValidacion(textField_NoEstudiante, "^(?!0$)\\d{1,4}$");
            aplicarValidacion(textField_PerfilEstudiante, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-]{1,45}$");
            aplicarValidacion(txtArea_Temas, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$");
-           aplicarValidacion(txtArea_Informacion, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$");
+           aplicarValidacion(txtArea_Informacion, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,1000}$");
            aplicarValidacion(txtArea_Objetivo, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$");
        } catch (Exception ex) {
           LOG.fatal(ex);
@@ -92,8 +90,8 @@ public class NuevaPropuestaControlador implements Initializable{
        }
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
         
     private void llenarComboBoxTipoColaboracion() {
@@ -159,11 +157,11 @@ public class NuevaPropuestaControlador implements Initializable{
      @FXML
     void cancelarPropuesta(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -199,10 +197,10 @@ public class NuevaPropuestaControlador implements Initializable{
             PropuestaColaboracion propuestaColaboracion = crearPropuesta();
             if (registraPropuesta(propuestaColaboracion) == true) {
                 Alertas.mostrarMensajeExito();
-                 Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+                 Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
                 SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
                 try {
-                    sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+                    sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
                 } catch (IOException ex) {
                     LOG.error( ex);
                 }
@@ -286,10 +284,19 @@ public class NuevaPropuestaControlador implements Initializable{
                 propuestaColaboracion.setTemas(txtArea_Temas.getText());
                 propuestaColaboracion.setInformacionAdicional(txtArea_Informacion.getText());
                 propuestaColaboracion.setObjetivoGeneral(txtArea_Objetivo.getText());
-            } catch (IllegalArgumentException coreoException) {
+            } catch (IllegalArgumentException illegalArgument) {
                 Alertas.mostrarMensajeInformacionInvalida();
                 validacion = false;
             }
+            
+            try {
+                propuestaColaboracion.setNumeroEstudiante(Integer.parseInt(textField_NoEstudiante.getText()));
+
+            } catch (IllegalArgumentException illegalArgument) {
+                Alertas.mostrarMensajeNumeroEstudianteInvalido();
+                validacion = false;
+            }
+            
         } else {
             Alertas.mostrarMensajeCamposVacios();
             validacion = false;

@@ -21,5 +21,5 @@ public interface IProfesor {
     public List<String>obtenerListaDeNombreInstitucion() throws SQLException;
     public int actualizarInformacionDelProfesor(Profesor profesor, String idProfesor) throws SQLException;
     public boolean verificarProfesorDuplicado(Profesor profesor) throws SQLException ;
-    
+    public List<List<String>> obtenerListaDeInstitucionesSinInstitucion();
 }

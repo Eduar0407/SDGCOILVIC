@@ -1,12 +1,16 @@
 package sdgcoilvic.logicaDeNegocio.clases;
 
+import java.util.regex.Pattern;
+
 public class Acceso {
     private int idAcceso;
     private String contrasenia;
     private String usuario;
     private String tipoUsuario;
 
-
+    private final static String EXPRESION_REGULAR_USUARIO = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private static final String EXPRESION_REGULAR_CONTRASENIA = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+    
     public int getIdAcceso() {
         return idAcceso;
     }
@@ -20,7 +24,11 @@ public class Acceso {
     }
 
     public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+        if(contrasenia!=null&&Pattern.matches(EXPRESION_REGULAR_CONTRASENIA, contrasenia)){
+            this.contrasenia = contrasenia;
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     public String getUsuario() {
@@ -28,7 +36,11 @@ public class Acceso {
     }
 
     public void setUsuario(String usuario) {
-        this.usuario = usuario;
+        if(Pattern.matches(EXPRESION_REGULAR_USUARIO, String.valueOf(usuario))){
+            this.usuario = usuario;
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     public String getTipoUsuario() {

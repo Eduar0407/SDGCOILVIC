@@ -17,8 +17,9 @@ public class PropuestaColaboracion {
     private String estadoPropuesta;
 
     private final static String EXPRESION_REGULAR_NOMBRE = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,200}$";
-    private final static String NUMERO_ESTUDIANTE = "^\\d{1,4}$";
-    private final static String EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$";
+    private final static String NUMERO_ESTUDIANTE = "^(?:1[0-4][0-9]|150|[1-9][0-9])$";
+    private final static String EXPRESION_REGULAR_OBJETIVO_TEMA = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,500}$";
+        private final static String EXPRESION_REGULAR_INFORMACION_ADICIONAL = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;:\\-_.0-9]{1,1000}$";
     private final static String EXPRESION_REGULAR_PERFIL_ESTUDIANTE= "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-\\.]{1,45}$";      
 
     public int getIdPropuestaColaboracion() {
@@ -54,7 +55,7 @@ public class PropuestaColaboracion {
     }
 
     public void setObjetivoGeneral(String objetivoGeneral) {
-        if (objetivoGeneral!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, objetivoGeneral.trim())) {
+        if (objetivoGeneral!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA, objetivoGeneral.trim())) {
             this.objetivoGeneral = objetivoGeneral.trim().replaceAll("\\s+", " ");
         }else{
             throw new IllegalArgumentException();
@@ -66,7 +67,7 @@ public class PropuestaColaboracion {
     }
 
     public void setTemas(String temas) {
-        if (temas!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, temas.trim())) {
+        if (temas!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA, temas.trim())) {
             this.temas = temas.trim().replaceAll("\\s+", " ");
         }else{
             throw new IllegalArgumentException();
@@ -78,7 +79,12 @@ public class PropuestaColaboracion {
     }
 
     public void setNumeroEstudiante(int numeroEstudiante) {
-        this.numeroEstudiante = numeroEstudiante;
+            String numeroStr = String.valueOf(numeroEstudiante);
+            if (numeroStr.matches(NUMERO_ESTUDIANTE)) {
+                this.numeroEstudiante = numeroEstudiante;
+            } else {
+                throw new IllegalArgumentException();
+            }
     }
 
     public String getInformacionAdicional() {
@@ -86,7 +92,7 @@ public class PropuestaColaboracion {
     }
 
     public void setInformacionAdicional(String informacionAdicional) {
-        if (informacionAdicional!=null&&Pattern.matches(EXPRESION_REGULAR_OBJETIVO_TEMA_INFORMACION_ADICIONAL, informacionAdicional.trim())) {
+        if (informacionAdicional!=null&&Pattern.matches(EXPRESION_REGULAR_INFORMACION_ADICIONAL, informacionAdicional.trim())) {
             this.informacionAdicional = informacionAdicional.trim().replaceAll("\\s+", " ");
         }else{
             throw new IllegalArgumentException();

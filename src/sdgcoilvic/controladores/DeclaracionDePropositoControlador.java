@@ -1,6 +1,6 @@
-
 package sdgcoilvic.controladores;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -20,15 +20,13 @@ import sdgcoilvic.utilidades.Alertas;
 
 public class DeclaracionDePropositoControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(DeclaracionDePropositoControlador.class);
-    private Stage stage;
+    private Stage escenario;
     private AccesoSingleton accesoSingleton;
     public static int idPropuestaColaboracion;
     @FXML private TextArea txtArea_Comentario;
     @FXML private Button button_Regresar;
     @FXML private Button button_Enviar;
-    
-    
-    
+
     private Runnable onCloseCallback;
 
     public void setOnCloseCallback(Runnable onCloseCallback) {
@@ -51,16 +49,22 @@ public class DeclaracionDePropositoControlador implements Initializable{
            
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
     
     @FXML
     void button_Regresar(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Regresar.getScene().getWindow();
-            myStage.close();
+            Stage escenario = (Stage) button_Regresar.getScene().getWindow();
+            SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+            try {
+                sdgcoilvic.mostrarVentanaAdministrarColaboracionesDisponibles(escenario);
+            } catch (IOException exception) {
+                LOG.error(exception);
+            }
         }
+
     }
     
     @FXML
@@ -71,8 +75,13 @@ public class DeclaracionDePropositoControlador implements Initializable{
                 try {
                     if (solicitudColaboracionDAO.enviarSolicitudDeColaboracion(idPropuestaColaboracion, txtArea_Comentario.getText(),idAcceso)== 1) {
                             Alertas.mostrarMensajeExito();
-                            Stage myStage = (Stage) button_Regresar.getScene().getWindow();
-                            myStage.close();
+                                Stage escenario = (Stage) button_Regresar.getScene().getWindow();
+                                SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+                                try {
+                                    sdgcoilvic.mostrarVentanaAdministrarColaboracionesDisponibles(escenario);
+                                } catch (IOException ex) {
+                                    LOG.error(ex);
+                                }
 
                     }else {
                         Alertas.mostrarMensajeInformacionNoRegistrada();
@@ -95,8 +104,8 @@ public class DeclaracionDePropositoControlador implements Initializable{
         if (!estaVacio()){
             try{
                 solicitudColaboracion.setMensaje(txtArea_Comentario.getText());
-            } catch (IllegalArgumentException exception){
-                LOG.warn(exception);
+            } catch (IllegalArgumentException illegalArgument){
+                LOG.warn(illegalArgument);
                 validacion = false;
             }
         

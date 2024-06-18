@@ -14,18 +14,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import org.apache.log4j.Logger;
 import sdgcoilvic.utilidades.Alertas;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.clases.Profesor;
+import sdgcoilvic.logicaDeNegocio.enums.EnumProfesor;
 
 public class ModificarProfesorExternoControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(ModificarProfesorExternoControlador.class);
     private static String correoAntiguo;
     private static String estadoProfesorAnterior;
-    private Stage stage;
+    private Stage escenario;
     public static String idProfesor;
     
     @FXML private Button button_Cancelar;
@@ -33,6 +35,7 @@ public class ModificarProfesorExternoControlador implements Initializable{
     @FXML private ComboBox<String> comboBox_Idioma;
     @FXML private ComboBox<String> comboBox_Institucion;
     @FXML private ComboBox<String> comboBox_EstadoProfesor;
+    @FXML private Label label_EstadoProfesor;
     @FXML private TextField textField_Nombre;
     @FXML private TextField textField_ApellidoPaterno;
     @FXML private TextField textField_ApellidoMaterno;
@@ -57,10 +60,17 @@ public class ModificarProfesorExternoControlador implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         llenarComboBoxIdioma();
         llenarComboBoxInstitucion();
-        llenarComboBoxEstadoProfesor();
         informacionProfesor();
+        llenarComboBoxEstadoProfesor();
         correoAntiguo = textField_Correo.getText(); 
         estadoProfesorAnterior = comboBox_EstadoProfesor.getValue();
+        if(estadoProfesorAnterior.equals(EnumProfesor.Activo.toString())|| estadoProfesorAnterior.equals(EnumProfesor.Archivado.toString())){
+            comboBox_EstadoProfesor.setVisible(true);
+            label_EstadoProfesor.setVisible(true);
+        }else{
+            comboBox_EstadoProfesor.setVisible(false);
+            label_EstadoProfesor.setVisible(false);
+        }
         aplicarValidacion(textField_Nombre, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{0,60}$");
         aplicarValidacion(textField_ApellidoPaterno, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
         aplicarValidacion(textField_ApellidoMaterno, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
@@ -68,19 +78,13 @@ public class ModificarProfesorExternoControlador implements Initializable{
     }
     
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
 
     private void llenarComboBoxEstadoProfesor() {
         ObservableList<String> items = FXCollections.observableArrayList("Activo", "Archivado");
         comboBox_EstadoProfesor.setItems(items);
-        
-        comboBox_EstadoProfesor.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                confirmarCambioEstadoProfesor(oldValue, newValue);
-            }
-        });
     }
     
     private void llenarComboBoxIdioma() {
@@ -91,7 +95,16 @@ public class ModificarProfesorExternoControlador implements Initializable{
 
     private void llenarComboBoxInstitucion() {
         List<List<String>> listaDeInstituciones = obtenerListaDeInstituciones();
-        ObservableList<String> items = FXCollections.observableArrayList(obtenerNombresDeLasListas(listaDeInstituciones));
+        List<String> nombresFiltrados = new ArrayList<>();
+        for (List<String> institucion : listaDeInstituciones) {
+            String claveInstitucional = institucion.get(0);
+            String nombreInstitucion = institucion.get(1);
+            
+            if (!claveInstitucional.equals("30MSU0940B") && !nombreInstitucion.equals("Universidad Veracruzana")) {
+                nombresFiltrados.add(nombreInstitucion);
+            }
+        }
+        ObservableList<String> items = FXCollections.observableArrayList(nombresFiltrados);
         comboBox_Institucion.setItems(items);
     }
 
@@ -111,8 +124,8 @@ public class ModificarProfesorExternoControlador implements Initializable{
 
     @FXML
     void button_Cancelar(ActionEvent event) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-            myStage.close();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+            escenario.close();
 
     }
 
@@ -122,39 +135,15 @@ public class ModificarProfesorExternoControlador implements Initializable{
             Profesor profesor = crearProfesor();
             if (actualizarProfesor(profesor) == true) {
                 Alertas.mostrarMensajeExito();
-                Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-                myStage.close();
+                Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+                escenario.close();
                 if (onCloseCallback != null) {
                     onCloseCallback.run();
                 }
             }    
         }
     }
-    
-     private void confirmarCambioEstadoProfesor(String oldValue, String newValue) {
-        if (oldValue != null && oldValue.equals("Activo") && newValue.equals("Archivado")) {
-            boolean resultado = Alertas.mostrarMensajeConfirmacionArchivarProfesor();
-            if (resultado) {
-                actualizarEstadoProfesor(newValue);
-            } else {
-                comboBox_EstadoProfesor.setValue(estadoProfesorAnterior);
-            }
-        } else if (oldValue != null && oldValue.equals("Archivado") && newValue.equals("Activo")) {
-            boolean resultado = Alertas.mostrarMensajeConfirmacionActivarProfesor();
-            if (resultado) {
-                actualizarEstadoProfesor(newValue);
-            } else {
-                comboBox_EstadoProfesor.setValue(estadoProfesorAnterior);
-            }
-        } else {
-            estadoProfesorAnterior = newValue;
-        }
-    }
-        
-    private void actualizarEstadoProfesor(String nuevoEstado) {
-        Profesor profesor = crearProfesor();
-        profesor.setEstadoProfesor(nuevoEstado);
-    }
+
     
     private Profesor crearProfesor() {
         Profesor profesor = new Profesor();
@@ -267,14 +256,14 @@ public class ModificarProfesorExternoControlador implements Initializable{
                 profesor.setNombre(textField_Nombre.getText());
                 profesor.setApellidoPaterno(textField_ApellidoPaterno.getText());
                 profesor.setApellidoMaterno(textField_ApellidoMaterno.getText());
-            } catch (IllegalArgumentException coreoException) {
+            } catch (IllegalArgumentException illegalArgument ) {
                 Alertas.mostrarMensajeInformacionInvalida();
                 validacion = false;
             }
 
             try {
                 profesor.setCorreo(textField_Correo.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
+            } catch (IllegalArgumentException coreoException) {
                 Alertas.mostrarMensajeCorreoConFormatoInvalido();
                 validacion = false;
             }

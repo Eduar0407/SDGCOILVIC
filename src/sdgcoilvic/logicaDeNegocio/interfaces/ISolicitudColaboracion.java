@@ -9,6 +9,8 @@ public interface ISolicitudColaboracion {
     public int rechazarSolicitud(int idSolicitudColaboracion) throws SQLException ;
     public int aceptarSolicitud(int idSolicitudColaboracion) throws SQLException ;
     public int reevertirEvaluacion(int idSolicitudColaboracion) throws SQLException ;
+    public int contarSolicitudesAceptadas(int idProfesor) throws SQLException ;
     public String obtenerSolicitudesAprobadas(int idSolicitudColaboracion) throws SQLException ;
     public boolean verificarEstadoColaboracion(int idProfesor)throws SQLException;
+    public boolean verificarEstadoSolicitud(int idProfesor) throws SQLException;
 }
