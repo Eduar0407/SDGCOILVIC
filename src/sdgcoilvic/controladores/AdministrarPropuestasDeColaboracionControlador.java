@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ import org.apache.log4j.Logger;
 import sdgcoilvic.logicaDeNegocio.clases.PropuestaColaboracion;
 import sdgcoilvic.logicaDeNegocio.clases.TablaPropuestasColaboracion;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PeriodoDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.SolicitudColaboracionDAO;
 import sdgcoilvic.utilidades.AccesoSingleton;
@@ -34,6 +36,7 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
     ObservableList<TablaPropuestasColaboracion> lista = FXCollections.observableArrayList();
     @FXML private Button button_Regresar;
     @FXML private Button button_NuevaPropuesta;
+    
     @FXML private TableView<TablaPropuestasColaboracion> tableView_Propuestas;
     @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_NombrePropuesta;
     @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Tipo;
@@ -41,6 +44,7 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
     @FXML private TableColumn<TablaPropuestasColaboracion, String> tableColumn_Estado;
     @FXML private TableColumn<TablaPropuestasColaboracion, Void> tableColumn_Opcion;
     @FXML private ImageView imageView_SubMenu;   
+    @FXML private ImageView imageView_noHayPropuestas;
     
     private void mostrarImagen() {
         imageView_SubMenu.setImage(ImagesSetter.getImageSubMenu());
@@ -51,19 +55,27 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
         accesoSingleton = AccesoSingleton.getInstance();
         mostrarImagen();
         llenarTabla();
-        
-        tableColumn_Opcion.setCellFactory(param -> new TableCell<>() {
+        configurarColumnaOpcion();
+         verificarEstadoPropuestas();
+    }
+
+    private void verificarEstadoPropuestas() {
+        boolean todasIniciadas = lista.stream().allMatch(propuesta -> "Iniciada".equals(propuesta.getEstadoPropuesta()));
+        button_NuevaPropuesta.setVisible(todasIniciadas);
+    }
+    private void configurarColumnaOpcion() {
+                tableColumn_Opcion.setCellFactory(param -> new TableCell<>() {
             private final Button button_Corregir = new Button("Corregir");
             private final Button button_IniciarColaboracion = new Button("Iniciar Colaboración");
 
             {
                 button_Corregir.setOnAction(event -> {
-                    TablaPropuestasColaboracion data = getTableView().getItems().get(getIndex());
+                    TablaPropuestasColaboracion idPropuesta = getTableView().getItems().get(getIndex());
                     try {
                         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                        Stage stage = (Stage) button_Corregir.getScene().getWindow();
-                        ActualizarPropuestaControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
-                        sdgcoilvic.mostrarVentanaActualizarPropuestaPropuesta(stage);
+                        Stage escenario = (Stage) button_Corregir.getScene().getWindow();
+                        ActualizarPropuestaControlador.idPropuestaColaboracion = idPropuesta.getIdPropuestaColaboracion();
+                        sdgcoilvic.mostrarVentanaActualizarPropuestaPropuesta(escenario);
                     } catch (IOException ioexception) {
                         LOG.error(ioexception.getMessage());
                         Alertas.mostrarMensajeErrorCambioPantalla();
@@ -88,9 +100,9 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
                         }
 
                         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                        Stage stage = (Stage) button_IniciarColaboracion.getScene().getWindow();
+                        Stage escenario = (Stage) button_IniciarColaboracion.getScene().getWindow();
                         IniciarColaboracionControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
-                        sdgcoilvic.mostrarVentanaIniciarColaboracion(stage);
+                        sdgcoilvic.mostrarVentanaIniciarColaboracion(escenario);
 
                     } catch (IOException | SQLException e) {
                         LOG.error(e.getMessage());
@@ -109,15 +121,9 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
                         if (null == propuesta.getEstadoPropuesta()) {
                             setGraphic(null);
                         } else switch (propuesta.getEstadoPropuesta()) {
-                            case "Rechazada":
-                                setGraphic(button_Corregir);
-                                break;
-                            case "Ofertada":
-                                setGraphic(button_IniciarColaboracion);
-                                break;
-                            default:
-                                setGraphic(null);
-                                break;
+                            case "Rechazada" -> setGraphic(button_Corregir);
+                            case "Ofertada" -> setGraphic(button_IniciarColaboracion);
+                            default -> setGraphic(null);
                         }
                     }
                 }
@@ -126,14 +132,21 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
     
     private void llenarTabla() {
         PropuestaColaboracionDAO propuestaColaboracionDAO = new PropuestaColaboracionDAO();
-        List<PropuestaColaboracion> propuestasLista = null;
-
+        List<PropuestaColaboracion> propuestasLista = new ArrayList<>();
+        List<List<String>> listaPeriodos = null;
         try {
-            List<List<String>> listaPeriodos = obtenerListaDePeriodo();
+            listaPeriodos = obtenerListaDePeriodo();
             int idAcceso = accesoSingleton.getAccesoId();
             propuestasLista = propuestaColaboracionDAO.consultarPropuestasColaboracionPorProfesor(idAcceso);
-            lista.clear();
-
+        } catch (SQLException ex) {
+            Alertas.mostrarMensajeErrorBaseDatos();
+            LOG.error(ex);
+        }
+        if (propuestasLista == null || propuestasLista.isEmpty() ) {
+           imageView_noHayPropuestas.setVisible(true);
+        } else {
+            imageView_noHayPropuestas.setVisible(false);
+        lista.clear();
             for (PropuestaColaboracion propuestaColaboracion : propuestasLista) {
                 String periodoInfo = "";
                 for (List<String> periodo : listaPeriodos) {
@@ -165,10 +178,6 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
             tableColumn_Tipo.setCellValueFactory(new PropertyValueFactory<>("tipoColaboracion"));
             tableColumn_Periodo.setCellValueFactory(new PropertyValueFactory<>("idPeriodo"));
             tableColumn_Estado.setCellValueFactory(new PropertyValueFactory<>("estadoPropuesta"));
-
-        } catch (SQLException ex) {
-            Alertas.mostrarMensajeErrorBaseDatos();
-            LOG.error(ex);
         }
     }
 
@@ -176,13 +185,18 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
     private List<List<String>> obtenerListaDePeriodo() throws SQLException {
         return new PeriodoDAO().obtenerListaDePeriodos();
     }
+    
+    private List<List<String>> obtenerListaDeIdiomas() throws SQLException {
+        return new ProfesorDAO().obtenerListaDeIdiomas();
+    }
        
     @FXML
     void button_Regresar(ActionEvent event) {
-        Stage myStage = (Stage) button_Regresar.getScene().getWindow();
+        Stage escenario = (Stage) button_Regresar.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+        
         try {
-            sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
+            sdgcoilvic.mostrarVentanaProfesorMenu(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -190,14 +204,26 @@ public class AdministrarPropuestasDeColaboracionControlador implements Initializ
 
     @FXML
     void button_NuevaPropuesta(ActionEvent event) {
-        Stage myStage = (Stage) button_NuevaPropuesta.getScene().getWindow();
+        
+        Stage ventana = (Stage) button_NuevaPropuesta.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+        List<List<String>> listaPeriodos = new ArrayList<>();
+        List<List<String>> listaDeIdiomas = new ArrayList<>();
         try {
-            sdgcoilvic.mostrarVentanaNuevaPropuesta(myStage);
-        } catch (IOException ex) {
+            listaPeriodos = obtenerListaDePeriodo();
+            listaDeIdiomas = obtenerListaDeIdiomas();
+        } catch (SQLException ex) {
             LOG.error( ex);
         }
+        if (listaDeIdiomas.isEmpty() || listaPeriodos.isEmpty()) {
+           Alertas.mostrarMensajeNoCatalogosDisponibles();
+        } else {
+            try {
+                sdgcoilvic.mostrarVentanaNuevaPropuesta(ventana);
+            } catch (IOException ex) {
+                LOG.error( ex);
+            }
+     }
     }
-
 
 }

@@ -17,16 +17,17 @@ import org.apache.log4j.Logger;
 import sdgcoilvic.logicaDeNegocio.clases.Profesor;
 import sdgcoilvic.logicaDeNegocio.enums.EnumProfesor;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.AccesoDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.ColaboracionDAO;
 import sdgcoilvic.utilidades.Alertas;
 import sdgcoilvic.utilidades.AccesoSingleton;
+import sdgcoilvic.utilidades.ColaboracionEnCursoSinglenton;
 
 public class AccesoControlador implements Initializable {
     private static final Logger LOG = Logger.getLogger(AccesoControlador.class);
-
     @FXML
     private TextField textField_Usuario;
     @FXML
-    private Button button_Login;
+    private Button button_Acceso;
     @FXML
     private ImageView imageAccesoFondo;
     @FXML
@@ -62,10 +63,10 @@ public class AccesoControlador implements Initializable {
     }
     
     private void abrirVentanaAdministrativoMenu() {
-        Stage myStage = (Stage) button_Login.getScene().getWindow();
+        Stage escenario = (Stage) button_Acceso.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
         try {
-            sdgcoilvic.mostrarVentanaAdministrativoMenu(myStage);
+            sdgcoilvic.mostrarVentanaAdministrativoMenu(escenario);
         } catch (IOException | NullPointerException ex) {
             LOG.error("Error al abrir la ventana administrativa: " + ex.getMessage());
             Alertas.mostrarMensajeErrorCambioPantalla();
@@ -73,10 +74,10 @@ public class AccesoControlador implements Initializable {
     }
 
     private void abrirVentanaProfesorMenu() {
-        Stage myStage = (Stage) button_Login.getScene().getWindow();
+        Stage ventana = (Stage) button_Acceso.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
         try {
-            sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
+            sdgcoilvic.mostrarVentanaProfesorMenu(ventana);
         }catch (IOException | NullPointerException ex) {
             LOG.error("Error al abrir la ventana de profesor: " + ex.getMessage());
             Alertas.mostrarMensajeErrorCambioPantalla();
@@ -84,16 +85,17 @@ public class AccesoControlador implements Initializable {
     }
     
     @FXML
-    private void button_Login(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
+    private void button_Acceso(ActionEvent event) {
+        Node fuente = (Node) event.getSource();
+        Stage escenario = (Stage) fuente.getScene().getWindow();
 
         if (verificarAcceso() != 0) {
             AccesoDAO accesoDAO = new AccesoDAO();
-            int IdAcceso = accesoDAO.obtenerIdProfesor(textField_Usuario.getText());
+            int IdAcceso = accesoDAO.obtenerIdProfesor(textField_Usuario.getText(),paswordField_Contrasenia.getText());
             AccesoSingleton.getInstance().setAccesoId(IdAcceso);
             try {
-                String tipoUsuario=accesoDAO.obtenerTipoUsuario(textField_Usuario.getText());
+                accesoDAO.ejecutarActualizacionBaseDatos();
+                String tipoUsuario=accesoDAO.obtenerTipoUsuario(textField_Usuario.getText(), paswordField_Contrasenia.getText());
                 switch (tipoUsuario) {
                     case "Administrativo" -> abrirVentanaAdministrativoMenu();
                     case "Profesor" -> validarEstadoProfesor(IdAcceso);
@@ -105,13 +107,21 @@ public class AccesoControlador implements Initializable {
         }
     }
     
-    public void validarEstadoProfesor(int idAcceso){
+    private void validarEstadoProfesor(int idAcceso){
         AccesoDAO accesoDAO = new AccesoDAO();
+        ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
+        int idColaboracionEnCurso = -1;
         try {
             Profesor profesor = accesoDAO.obtenerProfesorPorID(idAcceso);
             if(profesor != null && profesor.getEstadoProfesor().equals(EnumProfesor.Archivado.toString())){
                 Alertas.mostrarMensajeAccesoDenegado();
             }else{
+                idColaboracionEnCurso = colaboracionDAO.obtenerIdColaboracionEnCurso(idAcceso);
+                if(idColaboracionEnCurso >= 1){
+                    ColaboracionEnCursoSinglenton.getInstance().setIdColaboracionEnCurso(idColaboracionEnCurso);
+                }else{
+                    ColaboracionEnCursoSinglenton.getInstance().setIdColaboracionEnCurso(-1);
+                }
                 abrirVentanaProfesorMenu();
             }
         }catch (SQLException sqlException ) {

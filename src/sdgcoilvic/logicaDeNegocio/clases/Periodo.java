@@ -16,6 +16,10 @@ public class Periodo {
         this.nombrePeriodo = nombrePeriodo;
     }
 
+    public Periodo() {
+
+    }
+
     public int getIdPeriodo() {
         return idPeriodo;
     }

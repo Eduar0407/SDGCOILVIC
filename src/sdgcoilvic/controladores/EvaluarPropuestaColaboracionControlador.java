@@ -24,11 +24,11 @@ import sdgcoilvic.logicaDeNegocio.implementacionDAO.PeriodoDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
 import sdgcoilvic.utilidades.Alertas;
-import sdgcoilvic.utilidades.CorreoElectronico;
+import sdgcoilvic.utilidades.EnviosDeCorreoElectronico;
 
 public class EvaluarPropuestaColaboracionControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(EvaluarPropuestaColaboracionControlador.class);
-    private Stage stage;
+    private Stage escenario;
     public static int idPropuestaColaboracion;
     
     @FXML private Button button_Cancelar;
@@ -53,8 +53,8 @@ public class EvaluarPropuestaColaboracionControlador implements Initializable{
         textArea.setTextFormatter(new TextFormatter<>(filtro));
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }   
     
     @Override
@@ -66,8 +66,8 @@ public class EvaluarPropuestaColaboracionControlador implements Initializable{
        } catch (Exception ex) {
           LOG.fatal(ex);
            Alertas.mostrarMensajeErrorBaseDatos();
-           Stage stage = (Stage) button_Cancelar.getScene().getWindow(); 
-           stage.close(); 
+           Stage escenario = (Stage) button_Cancelar.getScene().getWindow(); 
+           escenario.close(); 
        }
     }
     
@@ -79,11 +79,11 @@ public class EvaluarPropuestaColaboracionControlador implements Initializable{
     @FXML
     void button_Cancelar(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(myStage);
+                sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -103,11 +103,11 @@ public class EvaluarPropuestaColaboracionControlador implements Initializable{
                             propuestaColaboracionDAO.reevertirEstado(idPropuestaColaboracion);
                             return;
                         }else {
-                            Alertas.mostrarMensajeExito();
-                             Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+                            Alertas.mostrarMensajeEvaluacionPropuestaExito();
+                             Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
                             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
                             try {
-                                sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(myStage);
+                                sdgcoilvic.mostrarVentanaGestionDePropuestasColaboracion(escenario);
                             } catch (IOException ex) {
                                 LOG.error( ex);
                             }
@@ -133,7 +133,7 @@ public class EvaluarPropuestaColaboracionControlador implements Initializable{
                 "Atentamente,\n" +
                 "Equipo de SDGCOILVIC";
 
-        return CorreoElectronico.verificarEnvioCorreo(correo, "Estado de tu propuesta de colaboración", mensaje);
+        return EnviosDeCorreoElectronico.verificarEnvioCorreo(correo, "Estado de tu propuesta de colaboración", mensaje);
     }
     
     private boolean verificarInformacion() {

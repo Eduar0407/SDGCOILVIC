@@ -2,24 +2,13 @@
 package sdgcoilvic.logicaDeNegocio.enums;
 
 public enum EnumPais {
-    Brasil,
-    EstadosUnidosDeAmerica,
-    Cuba,
-    Argentina,
+    México,
+    USA,
     Colombia,
-    Chile,
-    Peru,
-    Ecuador,
-    Uruguay,
     Venezuela,
+    Brasil,
+    España,
     Alemania,
-    Espania,
-    Portugal,
-    Francia,
-    Italia,
-    ReinoUnido,
-    China,
-    Japon,
-    NuevaZelanda,
-    Mexico,
+    Argentina
+    
 }

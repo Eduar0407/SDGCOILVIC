@@ -1,4 +1,4 @@
-package sdgcoilvic.logicaDeNegocio.ImplementacionDAO;
+package sdgcoilvic.logicaDeNegocio.implementacionDAO;
 
 import com.mysql.cj.jdbc.CallableStatement;
 import java.sql.Statement;
@@ -27,13 +27,6 @@ public class InstitucionDAO implements IInstitucion {
                                                                     "INNER JOIN pais p ON i.Pais_idPais = p.idPais " +
                                                                     "WHERE i.nombreInstitucion LIKE ?";
 
-    
-     /**
-     * 
-     * @param institucion La institución que se va a insertar en la base de datos.
-     * @return El número de filas afectadas por la inserción. Devuelve 1 si se insertó correctamente, de lo contrario 0.
-     * @throws SQLException Si ocurre algún error durante la inserción en la base de datos.
-     */
 
     @Override
     public int insertarInstitucion(Institucion institucion) throws SQLException{
@@ -163,13 +156,6 @@ public class InstitucionDAO implements IInstitucion {
         return paises;
      }
      
-     
-    /**
-    * 
-    * @param result el resultado de una consulta SQL 
-    * @return una lista de instituciones
-    * @throws SQLException si hubo un problema con el acceso a la base de datos 
-    */
 
     private List<Institucion> obtenerListInstitucion(ResultSet result) throws SQLException {
         List<Institucion> listaInstitucion = new ArrayList<>();

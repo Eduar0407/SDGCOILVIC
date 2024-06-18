@@ -1,4 +1,4 @@
-package sdgcoilvic.logicaDeNegocio.ImplementacionDAO;
+package sdgcoilvic.logicaDeNegocio.implementacionDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

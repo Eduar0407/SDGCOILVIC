@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import sdgcoilvic.utilidades.Alertas;
-import sdgcoilvic.utilidades.CorreoElectronico;
+import sdgcoilvic.utilidades.EnviosDeCorreoElectronico;
 import sdgcoilvic.logicaDeNegocio.clases.Acceso;
 import sdgcoilvic.logicaDeNegocio.clases.Profesor;
 import sdgcoilvic.logicaDeNegocio.enums.EnumProfesor;
@@ -29,7 +28,7 @@ import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 
 public class AgregarProfesorExternoControlador implements Initializable {
     private static final Logger LOG = Logger.getLogger(AgregarProfesorExternoControlador.class);
-    private Stage stage;
+    private Stage escenario;
 
     @FXML private Button button_Cancelar;
     @FXML private Button button_Guardar;
@@ -72,8 +71,8 @@ public class AgregarProfesorExternoControlador implements Initializable {
         etiquetasDeError();
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
 
     private void llenarComboBoxIdioma() {
@@ -82,6 +81,7 @@ public class AgregarProfesorExternoControlador implements Initializable {
             ObservableList<String> items = FXCollections.observableArrayList(obtenerNombresDeLasListas(listaDeIdiomas));
             comboBox_Idioma.setItems(items);
         } catch (SQLException ex) {
+            
             LOG.error(ex);
         }
     }
@@ -96,12 +96,13 @@ public class AgregarProfesorExternoControlador implements Initializable {
         }
     }
 
+
     private List<List<String>> obtenerListaDeIdiomas() throws SQLException {
         return new ProfesorDAO().obtenerListaDeIdiomas();
     }
 
     private List<List<String>> obtenerListaDeInstituciones() throws SQLException {
-        return new ProfesorDAO().obtenerListaDeInstituciones();
+        return new ProfesorDAO().obtenerListaDeInstitucionesSinInstitucion();
     }
 
     private List<String> obtenerNombresDeLasListas(List<List<String>> lista) {
@@ -113,8 +114,8 @@ public class AgregarProfesorExternoControlador implements Initializable {
     @FXML
     private void cancelarRegistro(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-            myStage.close();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+            escenario.close();
         }
     }
     
@@ -126,8 +127,8 @@ public class AgregarProfesorExternoControlador implements Initializable {
             Acceso acceso = crearAcceso();
             if (registrarProfesor(profesor, acceso) == true) {
                 Alertas.mostrarMensajeExito();
-                Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-                myStage.close();
+                Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+                escenario.close();
                 if (onCloseCallback != null) {
                     onCloseCallback.run();
                 }
@@ -195,9 +196,13 @@ public class AgregarProfesorExternoControlador implements Initializable {
                         if (profesorDAO.registrarProfesor(profesor, acceso) == 1) {
                             registroExitoso = true;
                             if (enviarCorreo(profesor, acceso) == false) {
-                                profesorDAO.eliminarProfesor(profesor.getCorreo());
-                                 Alertas.mostrarMensajeElCorreoNoSePudoEnviar();
-                                  registroExitoso = false;
+                                Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+                                myStage.close();
+                                if (onCloseCallback != null) {
+                                    onCloseCallback.run();
+                                }
+                                Alertas.mostrarMensajeElCorreoNoSePudoEnviar();
+                                registroExitoso = false;
                             }
                         } else {
                             Alertas.mostrarMensajeInformacionNoRegistrada();
@@ -211,6 +216,8 @@ public class AgregarProfesorExternoControlador implements Initializable {
             } catch (SQLException sqlException) {
                 Alertas.mostrarMensajeErrorBaseDatos();
                 LOG.fatal("Error en la base de datos en la clase " + this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
+            } catch (IllegalArgumentException ilegaLArgument) {
+                LOG.error(ilegaLArgument);
             }
         }
         return registroExitoso;
@@ -224,50 +231,58 @@ public class AgregarProfesorExternoControlador implements Initializable {
                 "¡Gracias por su solicitud!\n" +
                 "SDGCOILVIC";
         
-        return CorreoElectronico.verificarEnvioCorreo(profesor.getCorreo(), "Credenciales de acceso", mensaje);
+        return EnviosDeCorreoElectronico.verificarEnvioCorreo(profesor.getCorreo(), "Credenciales de acceso", mensaje);
     }
     
+    private boolean estaVacioTextField() {
+          return textField_Nombre.getText().isEmpty() ||
+                 textField_ApellidoPaterno.getText().isEmpty() ||
+                 textField_Correo.getText().isEmpty();
+    }
 
-
-    private boolean estaVacio() {
-        int indiceInstitucionSeleccionada = comboBox_Institucion.getSelectionModel().getSelectedIndex();
-        int indiceIdiomaSeleccionado = comboBox_Idioma.getSelectionModel().getSelectedIndex();
-        return textField_Nombre.getText().isEmpty() ||
-                textField_ApellidoPaterno.getText().isEmpty() ||
-                textField_Correo.getText().isEmpty() ||
-                indiceInstitucionSeleccionada < 0 ||
-                indiceIdiomaSeleccionado < 0;
+    private boolean estaVacioComboBox() {
+          int indiceInstitucionSeleccionada = comboBox_Institucion.getSelectionModel().getSelectedIndex();
+          int indiceIdiomaSeleccionado = comboBox_Idioma.getSelectionModel().getSelectedIndex();
+          return indiceInstitucionSeleccionada < 0 || indiceIdiomaSeleccionado < 0;
     }
 
     private boolean verificarInformacion() {
-        Profesor profesor = new Profesor();
-        boolean validacion = true;
+          Profesor profesor = new Profesor();
+          boolean validacion = true;
 
-        if (!estaVacio()) {
-            try {
-                profesor.setNombre(textField_Nombre.getText());
-                profesor.setApellidoPaterno(textField_ApellidoPaterno.getText());
-                profesor.setApellidoMaterno(textField_ApellidoMaterno.getText());
-            } catch (IllegalArgumentException coreoException) {
-                Alertas.mostrarMensajeInformacionInvalida();
-                validacion = false;
-            }
+          boolean textFieldVacios = estaVacioTextField();
+          boolean comboBoxVacios = estaVacioComboBox();
 
-            try {
-                profesor.setCorreo(textField_Correo.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
-                label_ErrorCorreo.setVisible(true);
-                Alertas.mostrarMensajeCorreoConFormatoInvalido();
-                validacion = false;
-            }
+          if (textFieldVacios && comboBoxVacios) {
+              Alertas.mostrarMensajeCamposVacios();
+              validacion = false;
+          } else if (textFieldVacios) {
+              Alertas.mostrarMensajeCamposVacios();
+              validacion = false;
+          } else if (comboBoxVacios) {
+              Alertas.mostrarMensajeComboBoxSinSeleccionar("Estado o Institución");
+              validacion = false;
+          } else {
+              try {
+                  profesor.setNombre(textField_Nombre.getText());
+                  profesor.setApellidoPaterno(textField_ApellidoPaterno.getText());
+                  profesor.setApellidoMaterno(textField_ApellidoMaterno.getText());
+              } catch (IllegalArgumentException ilegaLArgument) {
+                  Alertas.mostrarMensajeInformacionInvalida();
+                  validacion = false;
+              }
 
-        } else {
-            Alertas.mostrarMensajeCamposVacios();
-            validacion = false;
-        }
-        return validacion;
+              try {
+                  profesor.setCorreo(textField_Correo.getText());
+              } catch (IllegalArgumentException correoException) {
+                  label_ErrorCorreo.setVisible(true);
+                  Alertas.mostrarMensajeCorreoConFormatoInvalido();
+                  validacion = false;
+              }
+          }
 
-    }  
+          return validacion;
+    }
     
     private void etiquetasDeError() {
         label_ErrorNombre.setVisible(false);

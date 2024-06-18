@@ -1,4 +1,3 @@
-
 package sdgcoilvic.controladores;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ import sdgcoilvic.logicaDeNegocio.clases.TablaSolicitudesColaboracion;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.SolicitudColaboracionDAO;
 import sdgcoilvic.utilidades.AccesoSingleton;
 import sdgcoilvic.utilidades.Alertas;
-import sdgcoilvic.utilidades.CorreoElectronico;
+import sdgcoilvic.utilidades.EnviosDeCorreoElectronico;
 import sdgcoilvic.utilidades.ImagesSetter;
 
 public class AdministrarSolicitudesControlador implements Initializable{
@@ -69,12 +68,12 @@ public class AdministrarSolicitudesControlador implements Initializable{
         void button_RechazarSolicitud(ActionEvent event) {
             TablaSolicitudesColaboracion solicitudSeleccionada = tableView_Solicitudes.getSelectionModel().getSelectedItem();
             if (solicitudSeleccionada != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmación");
-                alert.setHeaderText("¿Estás seguro de que quieres rechazar esta solicitud?");
-                alert.setContentText("Si presionas 'Aceptar', la solicitud será rechazada.");
+                Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+                alerta.setTitle("Confirmación");
+                alerta.setHeaderText("¿Estás seguro de que quieres rechazar esta solicitud?");
+                alerta.setContentText("Si presionas 'Aceptar', la solicitud será rechazada.");
 
-                alert.showAndWait().ifPresent(response -> {
+                alerta.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         SolicitudColaboracionDAO solicitudColaboracionDAO = new SolicitudColaboracionDAO();
                         int idSolicitudColaboracion = solicitudSeleccionada.getIdSolicitudColaboracion();
@@ -84,7 +83,7 @@ public class AdministrarSolicitudesControlador implements Initializable{
                                 String correo = solicitudSeleccionada.getCorreo();
                                 String avaluacion = "rechazada";
                                 if (enviarCorreo(colaboracion, correo, avaluacion)) {
-                                    Alertas.mostrarMensajeExito();
+                                    Alertas.mostrarEvaluacionMensajeExito();
                                     llenarTabla();
                                 } else {
                                     Alertas.mostrarMensajeElCorreoNoSePudoEnviar();
@@ -104,26 +103,47 @@ public class AdministrarSolicitudesControlador implements Initializable{
             }
         }
 
+    private int contarSolicitudesAceptadas() {
+        SolicitudColaboracionDAO solicitudColaboracionDAO = new SolicitudColaboracionDAO();
+        int idAcceso = accesoSingleton.getAccesoId();
+        try {
+            return solicitudColaboracionDAO.contarSolicitudesAceptadas(idAcceso);
+        } catch (SQLException ex) {
+            LOG.error(ex);
+            return -1;
+        }
+    }
+
     @FXML
     void button_AceptarSolicitud(ActionEvent event) {
+        int solicitudesAceptadas = contarSolicitudesAceptadas();
+        if (solicitudesAceptadas >= 4) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Límite alcanzado");
+            alert.setHeaderText("No se pueden aceptar más solicitudes");
+            alert.setContentText("Ya se han aceptado 4 solicitudes. No se pueden aceptar más.");
+            alert.showAndWait();
+            return;
+        }
+        
         TablaSolicitudesColaboracion solicitudSeleccionada = tableView_Solicitudes.getSelectionModel().getSelectedItem();
         if (solicitudSeleccionada != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmación");
-            alert.setHeaderText("¿Estás seguro de que quieres aceptar esta solicitud?");
-            alert.setContentText("Si presionas 'Aceptar', la solicitud será aceptada.");
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.setTitle("Confirmación");
+            alerta.setHeaderText("¿Estás seguro de que quieres aceptar esta solicitud?");
+            alerta.setContentText("Si presionas 'Aceptar', la solicitud será aceptada.");
 
-            alert.showAndWait().ifPresent(response -> {
+            alerta.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                     SolicitudColaboracionDAO solicitudColaboracionDAO = new SolicitudColaboracionDAO();
                     int idSolicitudColaboracion = solicitudSeleccionada.getIdSolicitudColaboracion();
                     try {
-                        if (solicitudColaboracionDAO.aceptarSolicitud(idSolicitudColaboracion) == 1) {
+                        if (solicitudColaboracionDAO.aceptarSolicitud(idSolicitudColaboracion) == 2) {
                             String colaboracion = solicitudSeleccionada.getNombreColaboracion();
                             String correo = solicitudSeleccionada.getCorreo();
                             String avaluacion = "aceptada";
                             if (enviarCorreo(colaboracion, correo, avaluacion)) {
-                                Alertas.mostrarMensajeExito();
+                                Alertas.mostrarEvaluacionMensajeExito();
                                 llenarTabla();
                             } else {
                                 Alertas.mostrarMensajeElCorreoNoSePudoEnviar();
@@ -151,7 +171,7 @@ public class AdministrarSolicitudesControlador implements Initializable{
                 "Atentamente,\n" +
                 "Equipo de SDGCOILVIC";
 
-        return CorreoElectronico.verificarEnvioCorreo(correo, "Estado de su solicitud de colaboración", mensaje);
+        return EnviosDeCorreoElectronico.verificarEnvioCorreo(correo, "Estado de su solicitud de colaboración", mensaje);
     }
     
     private void llenarTabla() {
@@ -182,11 +202,11 @@ public class AdministrarSolicitudesControlador implements Initializable{
 
     @FXML
     private void button_Regresar(ActionEvent event) {
-        Stage myStage = (Stage) button_Regresar.getScene().getWindow();
+        Stage escenario = (Stage) button_Regresar.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
+            sdgcoilvic.mostrarVentanaProfesorMenu(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }

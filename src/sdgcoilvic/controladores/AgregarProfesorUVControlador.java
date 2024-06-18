@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import sdgcoilvic.utilidades.Alertas;
-import sdgcoilvic.utilidades.CorreoElectronico;
+import sdgcoilvic.utilidades.EnviosDeCorreoElectronico;
 import sdgcoilvic.utilidades.GeneradorDeContrasenias;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorUVDAO;
@@ -29,7 +28,7 @@ import sdgcoilvic.logicaDeNegocio.enums.EnumTipoDeAcceso;
 
 public class AgregarProfesorUVControlador implements Initializable{
     private static final Logger LOG = Logger.getLogger(AgregarProfesorUVControlador.class);
-    private Stage stage;
+    private Stage escenario;
     
     @FXML private Button button_Cancelar;
     @FXML private Button button_Guardar;
@@ -62,7 +61,7 @@ public class AgregarProfesorUVControlador implements Initializable{
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        aplicarValidacion(textField_NumeroPersonal, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\d]{1,20}");
+        aplicarValidacion(textField_NumeroPersonal, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\d]{1,19}");
         aplicarValidacion(textField_Disciplina, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{0,200}$");
         aplicarValidacion(textField_Nombre, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
         aplicarValidacion(textField_ApellidoPaterno, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
@@ -74,8 +73,8 @@ public class AgregarProfesorUVControlador implements Initializable{
         llenarComboAreaAcademica(); 
          
     }
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
     
     private void llenarComboIdioma() {
@@ -157,8 +156,8 @@ public class AgregarProfesorUVControlador implements Initializable{
     @FXML
     void cancelarRegistro(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-            myStage.close();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+            escenario.close();
         }
     }
 
@@ -273,8 +272,8 @@ public class AgregarProfesorUVControlador implements Initializable{
             Acceso acceso = crearAcceso();
             if (registrarProfesorUV( acceso, profesorUV) == true) {
                 Alertas.mostrarMensajeExito();
-                Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-                myStage.close();
+                Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+                escenario.close();
                 if (onCloseCallback != null) {
                     onCloseCallback.run();
                 }
@@ -293,7 +292,11 @@ public class AgregarProfesorUVControlador implements Initializable{
                             if (profesorUVDAO.registrarProfesorUV( acceso, profesorUV) == 2) {
                                 registroExitoso = true;
                                 if (enviarCorreo(profesorUV, acceso) == false) {
-                                    profesorUVDAO.eliminarProfesorUV(profesorUV.getNoPersonal());
+                                    Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+                                    escenario.close();
+                                    if (onCloseCallback != null) {
+                                        onCloseCallback.run();
+                                    }
                                      Alertas.mostrarMensajeElCorreoNoSePudoEnviar();
                                       registroExitoso = false;
                                 }
@@ -324,56 +327,69 @@ public class AgregarProfesorUVControlador implements Initializable{
                 "¡Gracias por su solicitud!\n" +
                 "SDGCOILVIC";
         
-        return CorreoElectronico.verificarEnvioCorreo(profesorUV.getCorreo(), "Credenciales de acceso", mensaje);
+        return EnviosDeCorreoElectronico.verificarEnvioCorreo(profesorUV.getCorreo(), "Credenciales de acceso", mensaje);
     
     }
     
-    private boolean estaVacio() {
+ 
+    private boolean estaVacioTextField() {
+        return textField_Nombre.getText().isEmpty() ||
+               textField_ApellidoPaterno.getText().isEmpty() ||
+               textField_Correo.getText().isEmpty() ||
+               textField_NumeroPersonal.getText().isEmpty() ||
+               textField_Disciplina.getText().isEmpty();
+    }
+
+    private boolean estaVacioComboBox() {
         int indiceRegionSeleccionada = comboBox_Region.getSelectionModel().getSelectedIndex();
         int indiceIdiomaSeleccionado = comboBox_Idioma.getSelectionModel().getSelectedIndex();
         int indiceCategoriaContratacionSeleccionado = comboBox_CategoriaContratacion.getSelectionModel().getSelectedIndex();
         int indiceTipoContratacionSeleccionado = comboBox_TipoContratacion.getSelectionModel().getSelectedIndex();        
         int indiceAreaAcademicaSeleccionado = comboBox_AreaAcademica.getSelectionModel().getSelectedIndex();       
-        
-        return textField_Nombre.getText().isEmpty() ||
-                textField_ApellidoPaterno.getText().isEmpty() ||
-                textField_Correo.getText().isEmpty() ||
-                indiceRegionSeleccionada < 0 ||
-                indiceIdiomaSeleccionado < 0 ||
-                indiceCategoriaContratacionSeleccionado < 0 ||
-                indiceTipoContratacionSeleccionado < 0 ||
-                indiceAreaAcademicaSeleccionado < 0;
-    }
 
+        return indiceRegionSeleccionada < 0 ||
+               indiceIdiomaSeleccionado < 0 ||
+               indiceCategoriaContratacionSeleccionado < 0 ||
+               indiceTipoContratacionSeleccionado < 0 ||
+               indiceAreaAcademicaSeleccionado < 0;
+    }
 
     private boolean verificarInformacion() {
         ProfesorUV profesorUV = new ProfesorUV();
         boolean validacion = true;
 
-        if (!estaVacio()) {
+        boolean textFieldVacios = estaVacioTextField();
+        boolean comboBoxVacios = estaVacioComboBox();
+
+        if (textFieldVacios && comboBoxVacios) {
+            Alertas.mostrarMensajeCamposVacios();
+            validacion = false;
+        } else if (textFieldVacios) {
+            Alertas.mostrarMensajeCamposVacios();
+            validacion = false;
+        } else if (comboBoxVacios) {
+            Alertas.mostrarMensajeComboBoxSinSeleccionar("Región, Idioma, Categoría de Contratación, Tipo de Contratación o Área Académica");
+            validacion = false;
+        } else {
             try {
                 profesorUV.setNoPersonal(textField_NumeroPersonal.getText());
                 profesorUV.setDisciplina(textField_Disciplina.getText());
                 profesorUV.setNombre(textField_Nombre.getText());
                 profesorUV.setApellidoPaterno(textField_ApellidoPaterno.getText());
                 profesorUV.setApellidoMaterno(textField_ApellidoMaterno.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
+            } catch (IllegalArgumentException ilegaLArgument) {
                 Alertas.mostrarMensajeInformacionInvalida();
-                validacion = false;
-             }
-
-            
-            try {
-                profesorUV.setCorreo(textField_Correo.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
-                Alertas.mostrarMensajeCorreoConFormatoInvalido();
                 validacion = false;
             }
 
-        } else {
-            Alertas.mostrarMensajeCamposVacios();
-            validacion = false;
+            try {
+                profesorUV.setCorreo(textField_Correo.getText());
+            } catch (IllegalArgumentException correoException) {
+                Alertas.mostrarMensajeCorreoConFormatoInvalido();
+                validacion = false;
+            }
         }
+
         return validacion;
-    }  
+    }
 }

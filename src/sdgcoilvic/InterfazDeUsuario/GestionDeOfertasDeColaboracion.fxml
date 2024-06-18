@@ -22,11 +22,12 @@
          <children>
             <TableView fx:id="tableView_Colaboraciones" layoutX="42.0" layoutY="113.0" prefHeight="449.0" prefWidth="880.0">
                <columns>
-                  <TableColumn fx:id="column_Nombre" prefWidth="235.0" text="Nombre" />
-                  <TableColumn fx:id="column_Profesor" prefWidth="201.0" text="Profesor" />
-                  <TableColumn fx:id="column_Tipo" prefWidth="133.0" text="Tipo" />
-                  <TableColumn fx:id="column_Objetivo" minWidth="0.0" prefWidth="232.0" text="Objetivo" />
-                  <TableColumn fx:id="column_Estudiantes" minWidth="0.0" prefWidth="78.0" text="Estudiantes" />
+                  <TableColumn fx:id="column_Nombre" prefWidth="133.0" text="Nombre" />
+                  <TableColumn fx:id="column_Profesor" prefWidth="189.0" text="Profesor" />
+                  <TableColumn fx:id="column_Tipo" prefWidth="95.0" text="Tipo" />
+                  <TableColumn fx:id="column_Objetivo" minWidth="0.0" prefWidth="141.0" text="Objetivo" />
+                  <TableColumn fx:id="column_Temas" minWidth="0.0" prefWidth="169.0" text="Temas" />
+                  <TableColumn fx:id="column_Periodo" prefWidth="152.0" text="Periodo" />
                </columns>
             </TableView>
             <Label layoutX="260.0" layoutY="102.0" />

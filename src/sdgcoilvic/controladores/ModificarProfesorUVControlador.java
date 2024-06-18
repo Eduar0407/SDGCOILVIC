@@ -16,11 +16,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import sdgcoilvic.logicaDeNegocio.clases.Profesor;
 import sdgcoilvic.logicaDeNegocio.clases.ProfesorUV;
+import sdgcoilvic.logicaDeNegocio.enums.EnumProfesor;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorUVDAO;
 import sdgcoilvic.utilidades.Alertas;
@@ -31,7 +33,7 @@ public class ModificarProfesorUVControlador implements Initializable{
     private static String correoAntiguo;
     private static String estadoProfesorAnterior;
     private static String noPersonalAnterior;
-    private Stage stage;
+    private Stage escenario;
     public static String noPersonal;
     
     @FXML private Button button_Cancelar;
@@ -43,7 +45,7 @@ public class ModificarProfesorUVControlador implements Initializable{
     @FXML private ComboBox<String> comboBox_Idioma;
     @FXML private ComboBox<String> comboBox_Region;
     @FXML private ComboBox<String> comboBox_TipoContratacion;
-    
+    @FXML private Label label_EstadoProfesor;
     @FXML private TextField textField_ApellidoMaterno;
     @FXML private TextField textField_ApellidoPaterno;
     @FXML private TextField textField_Nombre;
@@ -68,7 +70,7 @@ public class ModificarProfesorUVControlador implements Initializable{
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        aplicarValidacion(textField_NumPersonal, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,20}");
+        aplicarValidacion(textField_NumPersonal, "^[1-9]\\d{0,19}$");
         aplicarValidacion(textField_Disciplina, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{0,200}$");
         aplicarValidacion(textField_Nombre, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
         aplicarValidacion(textField_ApellidoPaterno, "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,60}$");
@@ -83,21 +85,22 @@ public class ModificarProfesorUVControlador implements Initializable{
         noPersonalAnterior = textField_NumPersonal.getText(); 
         correoAntiguo = textField_Correo.getText(); 
         estadoProfesorAnterior = comboBox_EstadoProfesor.getValue();
+        if(estadoProfesorAnterior.equals(EnumProfesor.Activo.toString())|| estadoProfesorAnterior.equals(EnumProfesor.Archivado.toString())){
+            comboBox_EstadoProfesor.setVisible(true);
+            label_EstadoProfesor.setVisible(true);
+        }else{
+            comboBox_EstadoProfesor.setVisible(false);
+            label_EstadoProfesor.setVisible(false);
+        }
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
     
     private void llenarComboBoxEstadoProfesor() {
         ObservableList<String> items = FXCollections.observableArrayList("Activo", "Archivado");
         comboBox_EstadoProfesor.setItems(items);
-        
-        comboBox_EstadoProfesor.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                confirmarCambioEstadoProfesor(oldValue, newValue);
-            }
-        });
     }
     
     private void llenarComboBoxIdioma() {
@@ -158,8 +161,8 @@ public class ModificarProfesorUVControlador implements Initializable{
     
     @FXML
     void button_Cancelar(ActionEvent event) {
-        Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-        myStage.close();
+        Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+        escenario.close();
     }
     
     @FXML
@@ -175,37 +178,11 @@ public class ModificarProfesorUVControlador implements Initializable{
     }
     
     private void cerrarVentana() {
-        Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
-        myStage.close();
+        Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
+        escenario.close();
         if (onCloseCallback != null) {
             onCloseCallback.run();
         }
-    }
-
-    
-    private void confirmarCambioEstadoProfesor(String oldValue, String newValue) {
-        if (oldValue != null && oldValue.equals("Activo") && newValue.equals("Archivado")) {
-            boolean resultado = Alertas.mostrarMensajeConfirmacionArchivarProfesor();
-            if (resultado) {
-                actualizarEstadoProfesor(newValue);
-            } else {
-                comboBox_EstadoProfesor.setValue(estadoProfesorAnterior);
-            }
-        } else if (oldValue != null && oldValue.equals("Archivado") && newValue.equals("Activo")) {
-            boolean resultado = Alertas.mostrarMensajeConfirmacionActivarProfesor();
-            if (resultado) {
-                actualizarEstadoProfesor(newValue);
-            } else {
-                comboBox_EstadoProfesor.setValue(estadoProfesorAnterior);
-            }
-        } else {
-            estadoProfesorAnterior = newValue;
-        }
-    }
-         
-    private void actualizarEstadoProfesor(String nuevoEstado) {
-        Profesor profesor = crearProfesor();
-        profesor.setEstadoProfesor(nuevoEstado);
     }
     
     private Profesor crearProfesor() {
@@ -248,15 +225,8 @@ public class ModificarProfesorUVControlador implements Initializable{
                     Alertas.mostrarMensajeDatosIguales();
                     return false;
                 }
-                if (nuevoCorreo.equals(correoAntiguo) || nuevoNumeroPersonal.equals(noPersonalAnterior)) {
-                    if (profesorUVDAO.actualizarInformacionDelProfesorUV(profesor,profesorUV, noPersonal) == 2) {
-                        actualizacionExitosa = true;
-                    } else {
-                        Alertas.mostrarMensajeInformacionNoRegistrada();
-                    }
-                } else {
-                    if (!profesorDAO.verificarSiExisteElCorreo(nuevoCorreo)) {
-                        if(!profesorUVDAO.verificarSiExisteElNoPersonal(profesorUV.getNoPersonal())){
+                    if (nuevoCorreo.equals(correoAntiguo) || !profesorDAO.verificarSiExisteElCorreo(nuevoCorreo)) {
+                        if(nuevoNumeroPersonal.equals(noPersonalAnterior) || !profesorUVDAO.verificarSiExisteElNoPersonal(profesorUV.getNoPersonal())){
                             if (profesorUVDAO.actualizarInformacionDelProfesorUV(profesor,profesorUV, noPersonal) == 2) {
                                 actualizacionExitosa = true;
                             } else {
@@ -268,7 +238,7 @@ public class ModificarProfesorUVControlador implements Initializable{
                     } else {
                        Alertas.mostrarMensajeEmailYaRegistrado();
                     }
-                }
+                
             } catch (SQLException sqlException ) {
                 Alertas.mostrarMensajeErrorBaseDatos();
                 LOG.fatal("Error en la base de datos" + this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
@@ -278,20 +248,32 @@ public class ModificarProfesorUVControlador implements Initializable{
         return actualizacionExitosa;
     }   
     
-    private boolean hayCambiosEnDatosProfesor(Profesor profesorActual, Profesor nuevoProfesor,ProfesorUV profesorUVActual, ProfesorUV nuevoUVProfesor) {
-        return (profesorActual.getNombre() == null ? nuevoProfesor.getNombre() != null : !profesorActual.getNombre().equals(nuevoProfesor.getNombre())) ||
-               (profesorActual.getApellidoPaterno() == null ? nuevoProfesor.getApellidoPaterno() != null : !profesorActual.getApellidoPaterno().equals(nuevoProfesor.getApellidoPaterno())) ||
-               (profesorActual.getApellidoMaterno() == null ? nuevoProfesor.getApellidoMaterno() != null : !profesorActual.getApellidoMaterno().equals(nuevoProfesor.getApellidoMaterno())) ||
-               (profesorActual.getCorreo() == null ? nuevoProfesor.getCorreo() != null : !profesorActual.getCorreo().equals(nuevoProfesor.getCorreo())) ||
-                profesorActual.getIdIdiomas() != nuevoProfesor.getIdIdiomas() ||
-               (profesorActual.getEstadoProfesor() == null ? nuevoProfesor.getEstadoProfesor() != null : !profesorActual.getEstadoProfesor().equals(nuevoProfesor.getEstadoProfesor())) ||
-               (profesorUVActual.getNoPersonal() == null ? nuevoUVProfesor.getNoPersonal() != null : !profesorUVActual.getNoPersonal().equals(nuevoUVProfesor.getNoPersonal())) ||
-               (profesorUVActual.getDisciplina() == null ? nuevoUVProfesor.getDisciplina() != null : !profesorUVActual.getDisciplina().equals(nuevoUVProfesor.getDisciplina())) ||
-                profesorUVActual.getIdRegion() != nuevoUVProfesor.getIdRegion() ||
-                profesorUVActual.getIdCategoriaContratacionUV() != nuevoUVProfesor.getIdCategoriaContratacionUV() ||  
-                profesorUVActual.getIdTipoContratacionUV() != nuevoUVProfesor.getIdTipoContratacionUV() ||
-                profesorUVActual.getIdAreaAcademica() != nuevoUVProfesor.getIdAreaAcademica();       
+    private boolean hayCambiosEnDatosProfesor(Profesor profesorActual, Profesor nuevoProfesor, ProfesorUV profesorUVActual, ProfesorUV nuevoUVProfesor) {
+        return hayCambiosEnProfesor(profesorActual, nuevoProfesor) || hayCambiosEnProfesorUV(profesorUVActual, nuevoUVProfesor);
     }
+
+    private boolean hayCambiosEnProfesor(Profesor profesorActual, Profesor nuevoProfesor) {
+        return !esIgual(profesorActual.getNombre(), nuevoProfesor.getNombre()) ||
+               !esIgual(profesorActual.getApellidoPaterno(), nuevoProfesor.getApellidoPaterno()) ||
+               !esIgual(profesorActual.getApellidoMaterno(), nuevoProfesor.getApellidoMaterno()) ||
+               !esIgual(profesorActual.getCorreo(), nuevoProfesor.getCorreo()) ||
+               profesorActual.getIdIdiomas() != nuevoProfesor.getIdIdiomas() ||
+               !esIgual(profesorActual.getEstadoProfesor(), nuevoProfesor.getEstadoProfesor());
+    }
+
+    private boolean hayCambiosEnProfesorUV(ProfesorUV profesorUVActual, ProfesorUV nuevoUVProfesor) {
+        return !esIgual(profesorUVActual.getNoPersonal(), nuevoUVProfesor.getNoPersonal()) ||
+               !esIgual(profesorUVActual.getDisciplina(), nuevoUVProfesor.getDisciplina()) ||
+               profesorUVActual.getIdRegion() != nuevoUVProfesor.getIdRegion() ||
+               profesorUVActual.getIdCategoriaContratacionUV() != nuevoUVProfesor.getIdCategoriaContratacionUV() ||
+               profesorUVActual.getIdTipoContratacionUV() != nuevoUVProfesor.getIdTipoContratacionUV() ||
+               profesorUVActual.getIdAreaAcademica() != nuevoUVProfesor.getIdAreaAcademica();
+    }
+
+    private boolean esIgual(Object actual, Object nuevo) {
+        return (actual == null ? nuevo == null : actual.equals(nuevo));
+    }
+
     
     private void asignarIdIdioma(Profesor profesor) {
         asignarId(comboBox_Idioma, obtenerListaDeIdiomas(), profesor::setIdIdiomas);
@@ -325,24 +307,22 @@ public class ModificarProfesorUVControlador implements Initializable{
          }
      }
 
-        private boolean estaVacio() {
-            int indiceRegionSeleccionada = comboBox_Region.getSelectionModel().getSelectedIndex();
-            int indiceIdiomaSeleccionado = comboBox_Idioma.getSelectionModel().getSelectedIndex();
-            int indiceCategoriaContratacionSeleccionada = comboBox_CategoriaContratacion.getSelectionModel().getSelectedIndex();
-            int indiceTipoContratacionSeleccionada = comboBox_TipoContratacion.getSelectionModel().getSelectedIndex();
-            int indiceAreaAcademicaSeleccionada = comboBox_AreaAcademica.getSelectionModel().getSelectedIndex();
-
-            return textField_Nombre.getText().isEmpty() ||
-                   textField_ApellidoPaterno.getText().isEmpty() ||
-                   textField_Correo.getText().isEmpty() ||
-                    textField_NumPersonal.getText().isEmpty() ||
-                    textField_Disciplina.getText().isEmpty() ||
-                   indiceRegionSeleccionada < 0 ||
-                   indiceIdiomaSeleccionado < 0 ||
-                   indiceCategoriaContratacionSeleccionada < 0 ||
-                   indiceTipoContratacionSeleccionada < 0 ||
-                   indiceAreaAcademicaSeleccionada < 0;
-        }
+    private String getTextOrEmpty(TextField textField) {
+        return textField != null ? textField.getText() : "";
+    }
+    
+    private boolean estaVacio() {
+        return getTextOrEmpty(textField_Nombre).isEmpty() ||
+               getTextOrEmpty(textField_ApellidoPaterno).isEmpty() ||
+               getTextOrEmpty(textField_Correo).isEmpty() ||
+               getTextOrEmpty(textField_NumPersonal).isEmpty() ||
+               getTextOrEmpty(textField_Disciplina).isEmpty() ||
+               comboBox_Region.getSelectionModel().getSelectedIndex() < 0 ||
+               comboBox_Idioma.getSelectionModel().getSelectedIndex() < 0 ||
+               comboBox_CategoriaContratacion.getSelectionModel().getSelectedIndex() < 0 ||
+               comboBox_TipoContratacion.getSelectionModel().getSelectedIndex() < 0 ||
+               comboBox_AreaAcademica.getSelectionModel().getSelectedIndex() < 0;
+    }
 
 
     private boolean verificarInformacion() {
@@ -356,7 +336,7 @@ public class ModificarProfesorUVControlador implements Initializable{
                 profesorUV.setNombre(textField_Nombre.getText());
                 profesorUV.setApellidoPaterno(textField_ApellidoPaterno.getText());
                 profesorUV.setApellidoMaterno(textField_ApellidoMaterno.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
+            } catch (IllegalArgumentException illegalArgument) {
                 Alertas.mostrarMensajeInformacionInvalida();
                 validacion = false;
              }
@@ -364,7 +344,7 @@ public class ModificarProfesorUVControlador implements Initializable{
             
             try {
                 profesorUV.setCorreo(textField_Correo.getText());
-            } catch (IllegalArgumentException nombrePaisException) {
+            } catch (IllegalArgumentException illegalArgument) {
                 Alertas.mostrarMensajeCorreoConFormatoInvalido();
                 validacion = false;
             }
@@ -376,7 +356,7 @@ public class ModificarProfesorUVControlador implements Initializable{
         return validacion;
     }  
     
-        private void informacionProfesorUV() {
+    private void informacionProfesorUV() {
             
         ProfesorUV profesorUV = new ProfesorUV();
         ProfesorUVDAO profesorUVDAO = new ProfesorUVDAO();

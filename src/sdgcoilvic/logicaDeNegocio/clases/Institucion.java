@@ -9,10 +9,9 @@ public class Institucion {
     private String correo;
 
     private final static String EXPRESION_REGULAR_CLAVE_INSTITUCIONAL = "^[A-Z0-9']{1,20}$";
-    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,200}$";
+    private final static String EXPRESION_REGULAR_NOMBRE_INSTITUCION = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-_\\.]{1,200}$";
     private final static String EXPRESION_REGULAR_NOMBRE_PAIS = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',\\-]{1,60}$";
-    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z.-]{2,255}\\.[a-zA-Z]{2,}$";
-private static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private final static String EXPRESION_REGULAR_CORREO_ELECTRONICO = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
 
     public String getClaveInstitucional() {

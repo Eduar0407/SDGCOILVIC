@@ -11,7 +11,7 @@ public class ProfesorUV extends Profesor{
     private int idAreaAcademica;
     private int idProfesorUV;
 
-    private final static String EXPRESION_REGULAR_NO_PERSONAL = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\d]{1,20}$";
+    private final static String EXPRESION_REGULAR_NO_PERSONAL = "^[1-9]\\d{0,19}$";
     private final static String EXPRESION_REGULAR_DISCIPLINA = "^[\\p{L}áéíóúÁÉÍÓÚüÜ\\s',;\\-_:\\.]{1,200}$";
     
     public ProfesorUV() {

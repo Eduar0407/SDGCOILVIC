@@ -8,7 +8,6 @@ import sdgcoilvic.logicaDeNegocio.clases.PropuestaColaboracion;
 public interface IPropuestaColaboracion {
    public int agregarPropuestaColaboracion(PropuestaColaboracion propuestaColaboracion)throws SQLException;
    public int evaluarPropuestaColaboracion(int idPropuesta, String evaluacion)throws SQLException;
-
    public List<PropuestaColaboracion> consultarPropuestasColaboracionPorProfesor(int idProfesor)throws SQLException;
    public int actualizarInformacionDeLaPropuesta (PropuestaColaboracion propuestaColaboracion, int idPropuesta) throws SQLException;
    public PropuestaColaboracion obtenerPropuestasColaboracionPorIdPropuesta ( int idPropuesta) throws SQLException;
@@ -19,6 +18,6 @@ public interface IPropuestaColaboracion {
    public List<PropuestaColaboracion> consultarTodasLasPropuestasColaboracionAceptadas() throws SQLException ;
    public List<PropuestaColaboracion> consultarTodasLasPropuestasColaboracionOfertadas(int idProfesor) throws SQLException ;
    public List<PropuestaColaboracion> consultarTodasLasPropuestasColaboracionEnEspera()throws SQLException;
-
+   public boolean verificarEstadoPropuestaColaboracion(int idProfesor) throws SQLException ;
 }
 

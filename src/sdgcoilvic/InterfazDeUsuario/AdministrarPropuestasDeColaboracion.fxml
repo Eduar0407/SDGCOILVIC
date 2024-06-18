@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="976.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.NuevaColaboraciónControlador">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="976.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.AdministrarPropuestasDeColaboracionControlador">
    <children>
-      <ImageView fx:id="imageSubMenu" fitHeight="549.0" fitWidth="976.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imageView_SubMenu" fitHeight="549.0" fitWidth="976.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/SubMenu.png" />
          </image>
@@ -32,7 +32,7 @@
             <Font name="Arial Black" size="27.0" />
          </font>
       </Label>
-      <Button fx:id="button_Cancelar" layoutX="852.0" layoutY="378.0" mnemonicParsing="false" onAction="#button_Cancelar" style="-fx-background-color: #fc542c;" text="Cancelar">
+      <Button fx:id="button_Regresar" layoutX="770.0" layoutY="350.0" mnemonicParsing="false" onAction="#button_Regresar" prefHeight="29.0" prefWidth="132.0" style="-fx-background-color: #fc542c;" text="Regresar">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -40,19 +40,22 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TableView layoutX="33.0" layoutY="88.0" prefHeight="403.0" prefWidth="668.0">
+      <TableView fx:id="tableView_Propuestas" layoutX="33.0" layoutY="88.0" prefHeight="403.0" prefWidth="704.0">
         <columns>
-          <TableColumn prefWidth="226.0" text="Nombre de la propuesta" />
-          <TableColumn minWidth="0.0" prefWidth="154.0" text="Tipo" />
-            <TableColumn prefWidth="75.0" text="Periodo" />
-            <TableColumn prefWidth="75.0" text="Estado" />
-            <TableColumn prefWidth="137.0" text="Corregir" />
+          <TableColumn fx:id="tableColumn_NombrePropuesta" prefWidth="176.0" text="Nombre de la propuesta" />
+          <TableColumn fx:id="tableColumn_Tipo" minWidth="0.0" prefWidth="56.5" text="Tipo" />
+          <TableColumn fx:id="tableColumn_Periodo" prefWidth="254.5" text="Periodo" />
+          <TableColumn fx:id="tableColumn_Estado" prefWidth="75.0" text="Estado" />
+          <TableColumn fx:id="tableColumn_Opcion" prefWidth="141.0" text="Opción" />
         </columns>
       </TableView>
-      <Button layoutX="814.0" layoutY="270.0" mnemonicParsing="false" style="-fx-background-color: #04c9fa;" text="Nueva Propuesta">
+      <Button fx:id="button_NuevaPropuesta" layoutX="770.0" layoutY="254.0" mnemonicParsing="false" onAction="#button_NuevaPropuesta" style="-fx-background-color: #04c9fa;" text="Nueva Propuesta">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
    </children>
 </AnchorPane>

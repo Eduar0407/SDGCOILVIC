@@ -1,5 +1,6 @@
-package sdgcoilvic.logicaDeNegocio.ImplementacionDAO;
+package sdgcoilvic.logicaDeNegocio.implementacionDAO;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import sdgcoilvic.logicaDeNegocio.clases.Colaboracion;
 import sdgcoilvic.logicaDeNegocio.interfaces.IColaboracion;
 
 public class ColaboracionDAO implements IColaboracion {
-    private static final String INSERTAR_COLABORACION = "INSERT INTO colaboracion_coilvic (nombreCurso, descripcion, recursos, Periodo_idPeriodo, aprendizajesEsperados, detallesAsistenciaParticipacion, detallesEvaluacion, detallesEntorno, Estado_Colaboracion_idEstadoColaboracion, Calendario_Actividades_idCalendarioActividades, Propuesta_Colaboracion_idPropuestaColaboracion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERTAR_COLABORACION = "{call agregarNuevaColaboracion(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
     private static final String FINALIZAR_COLABORACION = "UPDATE colaboracion_coilvic SET Estado_Colaboracion_idEstadoColaboracion = ? WHERE idColaboracion = ?";
     private static final String CERRAR_COLABORACION = "UPDATE colaboracion_coilvic SET Estado_Colaboracion_idEstadoColaboracion = ? WHERE idColaboracion = ?";
     private static final String INICIAR_COLABORACION = "UPDATE colaboracion_coilvic SET Estado_Colaboracion_idEstadoColaboracion = ? WHERE idColaboracion = ?";
@@ -21,73 +22,53 @@ public class ColaboracionDAO implements IColaboracion {
     private static final String CONSULTAR_COLABORACION = "SELECT * FROM colaboracion_coilvic WHERE idColaboracion = ?";
     private static final String CONSULTAR_TODAS_COLABORACIONES = "SELECT * FROM colaboracion_coilvic";
     private static final String FILTRAR_COLABORACIONES = "SELECT * FROM colaboracion_coilvic WHERE nombreCurso LIKE ? OR descripcion LIKE ?";
+    private static final String VERIFICAR_EXISTENCIA_ESTUDIANTE = "SELECT COUNT(*) AS numEstudiantesRelacionados FROM Colaboracion_CoilVic_has_Estudiante WHERE Colaboracion_CoilVic_idColaboracion = ?";
+ 
+    
+    
+
 
     @Override
-    public int crearColaboracion(Colaboracion colaboracion) {
-        int resultado = 0;
-        try (Connection conexion = ManejadorBaseDeDatos.obtenerConexion();
-             PreparedStatement preparedStatement = conexion.prepareStatement(INSERTAR_COLABORACION)) {
-            preparedStatement.setString(1, colaboracion.getNombreCurso());
-            preparedStatement.setString(2, colaboracion.getDescripcion());
-            preparedStatement.setString(3, colaboracion.getRecursos());
-            preparedStatement.setInt(4, colaboracion.getIdPeriodo());
-            preparedStatement.setString(5, colaboracion.getAprendizajesEsperados());
-            preparedStatement.setString(6, colaboracion.getDetallesAsistenciaParticipacion());
-            preparedStatement.setString(7, colaboracion.getDetallesEvaluacion());
-            preparedStatement.setString(8, colaboracion.getDetallesEntorno());
-            preparedStatement.setInt(9, colaboracion.getIdEstadoColaboracion());
-            preparedStatement.setInt(10, colaboracion.getIdCalendarioActividades());
-            preparedStatement.setInt(11, colaboracion.getIdPropuestaColaboracion());
-            resultado = preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(ColaboracionDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return resultado;
+    public int crearColaboracion(Colaboracion colaboracion, int idProfesor) throws SQLException {
+        int idColaboracion = -1;
+             Connection conexion = ManejadorBaseDeDatos.obtenerConexion();
+            CallableStatement callableStatement = conexion.prepareCall(INSERTAR_COLABORACION);
+     
+            callableStatement.setInt(1, idProfesor); 
+            callableStatement.setInt(2, colaboracion.getIdPropuestaColaboracion());
+            callableStatement.setString(3, colaboracion.getDescripcion());
+            callableStatement.setString(4, colaboracion.getRecursos());
+            callableStatement.setString(5, colaboracion.getAprendizajesEsperados());
+            callableStatement.setString(6, colaboracion.getDetallesAsistenciaParticipacion());
+            callableStatement.setString(7, colaboracion.getDetallesEvaluacion());
+            callableStatement.setString(8, colaboracion.getDetallesEntorno());
+            callableStatement.registerOutParameter(9, java.sql.Types.INTEGER); 
+
+            callableStatement.execute();
+
+            idColaboracion = callableStatement.getInt(9);
+        return idColaboracion;
     }
 
     @Override
-public int finalizarColaboracion(int idColaboracion) {
-    int idEstadoFinalizado = 2;
-    return actualizarEstadoColaboracion(idColaboracion, idEstadoFinalizado, FINALIZAR_COLABORACION);
-}
+    public int finalizarColaboracion(int idColaboracion) {
+        int idEstadoFinalizado = 2;
+        return actualizarEstadoColaboracion(idColaboracion, idEstadoFinalizado, FINALIZAR_COLABORACION);
+    }
 
 
     @Override
     public int cerrarColaboracion(int idColaboracion) {
-    int idEstadoCerrado = 3;
-    return actualizarEstadoColaboracion(idColaboracion, idEstadoCerrado, CERRAR_COLABORACION);
-}
-
-@Override
-    public int iniciarColaboracion(int idColaboracion) {
-    int idEstadoActivo = 1;
-    return actualizarEstadoColaboracion(idColaboracion, idEstadoActivo, INICIAR_COLABORACION);
-}
-
+        int idEstadoCerrado = 3;
+        return actualizarEstadoColaboracion(idColaboracion, idEstadoCerrado, CERRAR_COLABORACION);
+    }
 
     @Override
-    public int modificarColaboracion(Colaboracion colaboracion) {
-        int resultado = 0;
-        try (Connection conexion = ManejadorBaseDeDatos.obtenerConexion();
-             PreparedStatement preparedStatement = conexion.prepareStatement(MODIFICAR_COLABORACION)) {
-            preparedStatement.setString(1, colaboracion.getNombreCurso());
-            preparedStatement.setString(2, colaboracion.getDescripcion());
-            preparedStatement.setString(3, colaboracion.getRecursos());
-            preparedStatement.setInt(4, colaboracion.getIdPeriodo());
-            preparedStatement.setString(5, colaboracion.getAprendizajesEsperados());
-            preparedStatement.setString(6, colaboracion.getDetallesAsistenciaParticipacion());
-            preparedStatement.setString(7, colaboracion.getDetallesEvaluacion());
-            preparedStatement.setString(8, colaboracion.getDetallesEntorno());
-            preparedStatement.setInt(9, colaboracion.getIdEstadoColaboracion());
-            preparedStatement.setInt(10, colaboracion.getIdCalendarioActividades());
-            preparedStatement.setInt(11, colaboracion.getIdPropuestaColaboracion());
-            preparedStatement.setInt(12, colaboracion.getIdColaboracion());
-            resultado = preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(ColaboracionDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return resultado;
+        public int iniciarColaboracion(int idColaboracion) {
+        int idEstadoActivo = 1;
+        return actualizarEstadoColaboracion(idColaboracion, idEstadoActivo, INICIAR_COLABORACION);
     }
+
 
     @Override
     public Colaboracion consultarColaboracion(int idColaboracion) {
@@ -99,7 +80,6 @@ public int finalizarColaboracion(int idColaboracion) {
                 if (resultSet.next()) {
                     colaboracion = new Colaboracion();
                     colaboracion.setIdColaboracion(resultSet.getInt("idColaboracion"));
-                    colaboracion.setNombreCurso(resultSet.getString("nombreCurso"));
                     colaboracion.setDescripcion(resultSet.getString("descripcion"));
                     colaboracion.setRecursos(resultSet.getString("recursos"));
                     colaboracion.setIdPeriodo(resultSet.getInt("Periodo_idPeriodo"));
@@ -107,8 +87,6 @@ public int finalizarColaboracion(int idColaboracion) {
                     colaboracion.setDetallesAsistenciaParticipacion(resultSet.getString("detallesAsistenciaParticipacion"));
                     colaboracion.setDetallesEvaluacion(resultSet.getString("detallesEvaluacion"));
                     colaboracion.setDetallesEntorno(resultSet.getString("detallesEntorno"));
-                    colaboracion.setIdEstadoColaboracion(resultSet.getInt("Estado_Colaboracion_idEstadoColaboracion"));
-                    colaboracion.setIdCalendarioActividades(resultSet.getInt("Calendario_Actividades_idCalendarioActividades"));
                     colaboracion.setIdPropuestaColaboracion(resultSet.getInt("Propuesta_Colaboracion_idPropuestaColaboracion"));
                 }
             }
@@ -127,7 +105,6 @@ public int finalizarColaboracion(int idColaboracion) {
             while (resultSet.next()) {
                 Colaboracion colaboracion = new Colaboracion();
                 colaboracion.setIdColaboracion(resultSet.getInt("idColaboracion"));
-                colaboracion.setNombreCurso(resultSet.getString("nombreCurso"));
                 colaboracion.setDescripcion(resultSet.getString("descripcion"));
                 colaboracion.setRecursos(resultSet.getString("recursos"));
                 colaboracion.setIdPeriodo(resultSet.getInt("Periodo_idPeriodo"));
@@ -135,8 +112,6 @@ public int finalizarColaboracion(int idColaboracion) {
                 colaboracion.setDetallesAsistenciaParticipacion(resultSet.getString("detallesAsistenciaParticipacion"));
                 colaboracion.setDetallesEvaluacion(resultSet.getString("detallesEvaluacion"));
                 colaboracion.setDetallesEntorno(resultSet.getString("detallesEntorno"));
-                colaboracion.setIdEstadoColaboracion(resultSet.getInt("Estado_Colaboracion_idEstadoColaboracion"));
-                colaboracion.setIdCalendarioActividades(resultSet.getInt("Calendario_Actividades_idCalendarioActividades"));
                 colaboracion.setIdPropuestaColaboracion(resultSet.getInt("Propuesta_Colaboracion_idPropuestaColaboracion"));
                 colaboraciones.add(colaboracion);
             }
@@ -157,7 +132,6 @@ public int finalizarColaboracion(int idColaboracion) {
                 while (resultSet.next()) {
                     Colaboracion colaboracion = new Colaboracion();
                     colaboracion.setIdColaboracion(resultSet.getInt("idColaboracion"));
-                    colaboracion.setNombreCurso(resultSet.getString("nombreCurso"));
                     colaboracion.setDescripcion(resultSet.getString("descripcion"));
                     colaboracion.setRecursos(resultSet.getString("recursos"));
                     colaboracion.setIdPeriodo(resultSet.getInt("Periodo_idPeriodo"));
@@ -165,8 +139,6 @@ public int finalizarColaboracion(int idColaboracion) {
                     colaboracion.setDetallesAsistenciaParticipacion(resultSet.getString("detallesAsistenciaParticipacion"));
                     colaboracion.setDetallesEvaluacion(resultSet.getString("detallesEvaluacion"));
                     colaboracion.setDetallesEntorno(resultSet.getString("detallesEntorno"));
-                    colaboracion.setIdEstadoColaboracion(resultSet.getInt("Estado_Colaboracion_idEstadoColaboracion"));
-                    colaboracion.setIdCalendarioActividades(resultSet.getInt("Calendario_Actividades_idCalendarioActividades"));
                     colaboracion.setIdPropuestaColaboracion(resultSet.getInt("Propuesta_Colaboracion_idPropuestaColaboracion"));
                     colaboraciones.add(colaboracion);
                 }

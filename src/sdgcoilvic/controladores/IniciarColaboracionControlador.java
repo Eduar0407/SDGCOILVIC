@@ -1,5 +1,4 @@
 package sdgcoilvic.controladores;
-
 import java.sql.SQLException;
 import java.io.IOException;
 import java.net.URL;
@@ -18,14 +17,14 @@ import sdgcoilvic.logicaDeNegocio.clases.Colaboracion;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ColaboracionDAO;
 import sdgcoilvic.utilidades.AccesoSingleton;
 import sdgcoilvic.utilidades.Alertas;
+import sdgcoilvic.utilidades.ColaboracionEnCursoSinglenton;
 import sdgcoilvic.utilidades.ImagesSetter;
 
 public class IniciarColaboracionControlador  implements Initializable{
-    private static final Logger LOG= Logger.getLogger(NuevaPropuestaControlador.class);
-    private Stage stage;
+    private static final Logger LOG= Logger.getLogger(IniciarColaboracionControlador.class);
+    private Stage escenario;
     private AccesoSingleton accesoSingleton;
     public static  int idPropuestaColaboracion;
-    public static  int idColaboracion;
     @FXML private TextArea txtArea_Descripcion;
     @FXML private TextArea txtArea_Recursos;
     @FXML private TextArea txtArea_Aprendizajes;
@@ -51,8 +50,8 @@ public class IniciarColaboracionControlador  implements Initializable{
         textArea.setTextFormatter(new TextFormatter<>(filtro));
     }
     
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStage(Stage escenario) {
+        this.escenario = escenario;
     }
     
     @Override
@@ -71,11 +70,11 @@ public class IniciarColaboracionControlador  implements Initializable{
     @FXML
     void button_Cancelar(ActionEvent event) {
         if (Alertas.mostrarMensajeCancelar()) {
-            Stage myStage = (Stage) button_Cancelar.getScene().getWindow();
+            Stage escenario = (Stage) button_Cancelar.getScene().getWindow();
             SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
             try {
-                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
+                sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
             } catch (IOException ex) {
                 LOG.error( ex);
             }
@@ -85,44 +84,43 @@ public class IniciarColaboracionControlador  implements Initializable{
     @FXML
     void button_Iniciar(ActionEvent event) {
         if (verificarInformacion()) {
-            Colaboracion colaboracion = crearColaboracion(); 
-            if (registraColaboracion(colaboracion)) {
-                boolean agregarEstudiantes = Alertas.mostrarMensajeConfirmacion("¿No quiere agregar un estudiante a la colaboración?");
-
+            Colaboracion colaboracion = crearColaboracion();
+            int idColaboracion = registraColaboracion(colaboracion);
+            if (idColaboracion != -1) {
+                boolean agregarEstudiantes = Alertas.mostrarMensajeConfirmacion("¿Quiere agregar un estudiante a la colaboración?");
                 if (agregarEstudiantes) {
-                    Stage myStage = (Stage) button_Iniciar.getScene().getWindow();
+                    Stage escenario = (Stage) button_Iniciar.getScene().getWindow();
                     SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                    try {
-                        sdgcoilvic.mostrarVentanaAgregarEstudiante(myStage);
+                    try {          
+                        sdgcoilvic.mostrarVentanaAgregarEstudiante(escenario, () -> {
+                            Alertas.mostrarMensajeExitoInicioColanboracion();
+                            abrirVentanaAdministrarPropuestas(escenario);
+                    });
                     } catch (IOException ex) {
+                        Alertas.mostrarMensajeErrorCambioPantalla();
                         LOG.error(ex);
                     }
-
-                    myStage.setOnHiding(e -> {
-                        Alertas.mostrarMensajeExitoInicioColanboracion();
-                        SDGCOILVIC sdgcoilvicNuevo = new SDGCOILVIC();
-                        try {
-                            sdgcoilvicNuevo.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
-                        } catch (IOException ex) {
-                            LOG.error(ex);
-                        }
-                    });
-
                 } else {
                     Alertas.mostrarMensajeExitoInicioColanboracion();
-                    Stage myStage = (Stage) button_Iniciar.getScene().getWindow();
-                    SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                    try {
-                        sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(myStage);
-                    } catch (IOException ex) {
-                        LOG.error(ex);
-                    }
+                    Stage escenario = (Stage) button_Iniciar.getScene().getWindow();
+                    abrirVentanaAdministrarPropuestas(escenario);
                 }
+            } else {
+                Alertas.mostrarMensajeInformacionNoRegistrada();
             }
         }
     }
+
+    private void abrirVentanaAdministrarPropuestas(Stage escenario) {
+        SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+        try {
+            sdgcoilvic.mostrarVentanaAdministrarPropuestasDeColaboracion(escenario);
+        } catch (IOException ex) {
+            LOG.error(ex);
+        }
+    }
     
-        private Colaboracion crearColaboracion() {
+    private Colaboracion crearColaboracion() {
         Colaboracion colaboracion = new Colaboracion(); 
         colaboracion.setIdPropuestaColaboracion(idPropuestaColaboracion);
         colaboracion.setDescripcion(txtArea_Descripcion.getText());
@@ -135,27 +133,28 @@ public class IniciarColaboracionControlador  implements Initializable{
 
         return colaboracion;
     }
-    
-    private boolean registraColaboracion(Colaboracion colaboracion) {
+   
+    private int registraColaboracion(Colaboracion colaboracion) {
         ColaboracionDAO colaboracionDAO = new ColaboracionDAO();
-        boolean registroExitoso = false;
-        
-            int idProfesor = accesoSingleton.getAccesoId();
-            if (colaboracion != null) {
-                try {
-                    idColaboracion= colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
-                    if (idColaboracion != -1) {
-                        registroExitoso = true;
-                    } else {
-                        Alertas.mostrarMensajeInformacionNoRegistrada();
-                    }
-                } catch (SQLException sqlException) {
-                    Alertas.mostrarMensajeErrorBaseDatos();
-                    LOG.fatal("Error en la base de datos en la clase " + this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
-                }
-            } 
+        int idColaboracion = -1;
 
-        return registroExitoso;
+        int idProfesor = accesoSingleton.getAccesoId();
+        if (colaboracion != null) {
+            try {
+                idColaboracion = colaboracionDAO.crearColaboracion(colaboracion, idProfesor);
+                colaboracionDAO.vincularProfesoresALaColaboracion(idColaboracion);
+                colaboracionDAO.cambiarEstadoProfesorAColaborando(idColaboracion);
+                colaboracionDAO.rechazarTodasLasSolicitudes(idPropuestaColaboracion);
+                if(idColaboracion >= 1){
+                    ColaboracionEnCursoSinglenton.getInstance().setIdColaboracionEnCurso(idColaboracion);
+                }
+            } catch (SQLException sqlException) {
+                Alertas.mostrarMensajeErrorBaseDatos();
+                LOG.fatal("Error en la base de datos en la clase " + this.getClass().getName() + ", método " + Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + sqlException.getMessage(), sqlException);
+            }
+        }
+
+        return idColaboracion;
     }
         
     private boolean estaVacio() {
@@ -180,7 +179,7 @@ public class IniciarColaboracionControlador  implements Initializable{
                 colaboracion.setDetallesAsistenciaParticipacion(txtArea_Evaluacion.getText());
                 colaboracion.setDetallesEvaluacion(txtArea_Asistencia.getText());
                 colaboracion.setDetallesEntorno(txtArea_Entorno.getText());
-            } catch (IllegalArgumentException coreoException) {
+            } catch (IllegalArgumentException illegalArgument) {
                 Alertas.mostrarMensajeInformacionInvalida();
                 validacion = false;
             }

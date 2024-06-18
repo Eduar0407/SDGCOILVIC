@@ -24,8 +24,10 @@ import sdgcoilvic.logicaDeNegocio.clases.TablaPropuestasColaboracion;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PeriodoDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.ProfesorDAO;
 import sdgcoilvic.logicaDeNegocio.implementacionDAO.PropuestaColaboracionDAO;
+import sdgcoilvic.logicaDeNegocio.implementacionDAO.SolicitudColaboracionDAO;
 import sdgcoilvic.utilidades.AccesoSingleton;
 import sdgcoilvic.utilidades.Alertas;
+import sdgcoilvic.utilidades.ColaboracionEnCursoSinglenton;
 import sdgcoilvic.utilidades.ImagesSetter;
 
 public class AdministrarColaboracionesDisponiblesControlador implements Initializable{
@@ -50,11 +52,11 @@ public class AdministrarColaboracionesDisponiblesControlador implements Initiali
         
     @FXML
     void button_Regresar(ActionEvent event) {
-       Stage myStage = (Stage) button_Regresar.getScene().getWindow();
+       Stage escenario = (Stage) button_Regresar.getScene().getWindow();
         SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
 
         try {
-            sdgcoilvic.mostrarVentanaProfesorMenu(myStage);
+            sdgcoilvic.mostrarVentanaProfesorMenu(escenario);
         } catch (IOException ex) {
             LOG.error( ex);
         }
@@ -65,31 +67,60 @@ public class AdministrarColaboracionesDisponiblesControlador implements Initiali
         accesoSingleton = AccesoSingleton.getInstance();
         llenarTabla();
         mostrarImagen();
+        configurarColumnaOpcion();
+    }
+    
+
+    private boolean verificarSiTieneColaboracionEnCurso() {
+        boolean tieneColaboracionEnCurso = false;
+        int idColaboracionEnCurso = ColaboracionEnCursoSinglenton.getInstance().getIdColaboracionEnCurso();
+        tieneColaboracionEnCurso = idColaboracionEnCurso>=1;
+        return tieneColaboracionEnCurso;
+    }
+    
+    private void configurarColumnaOpcion() {
         tableColumn_EnviarSolicitud.setCellFactory(param -> new TableCell<>() {
             private final Button button_EnviarSolicitud = new Button("ENVIAR SOLICITUD");
             {
                 button_EnviarSolicitud.setOnAction(event -> {
-                    TablaPropuestasColaboracion data = getTableView().getItems().get(getIndex());                                                                     
-                    try {   
-                            SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
-                            Stage stage = (Stage) button_EnviarSolicitud.getScene().getWindow();
-                            DeclaracionDePropositoControlador.idPropuestaColaboracion = data.getIdPropuestaColaboracion();
-                            sdgcoilvic.mostrarVentanaDeclaracionDeProposito(stage );
+                    TablaPropuestasColaboracion colaboracionSeleccionada = getTableView().getItems().get(getIndex());
+                    try {
+                        SDGCOILVIC sdgcoilvic = new SDGCOILVIC();
+                        Stage ventana = (Stage) button_EnviarSolicitud.getScene().getWindow();
+                        DeclaracionDePropositoControlador.idPropuestaColaboracion = colaboracionSeleccionada.getIdPropuestaColaboracion();
+                        sdgcoilvic.mostrarVentanaDeclaracionDeProposito(ventana);
                     } catch (IOException ioexception) {
                         LOG.error(ioexception.getMessage());
                         Alertas.mostrarMensajeErrorCambioPantalla();
                     }
                 });
             }
+
             @Override
             public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    
-                    setGraphic(button_EnviarSolicitud);
+                    int idAcceso = accesoSingleton.getAccesoId();
+                    boolean tieneSolicitudesAceptadasOEnEspera = verificarEstadoSolicitud(idAcceso);
+                    if (tieneSolicitudesAceptadasOEnEspera || verificarSiTieneColaboracionEnCurso() == true) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(button_EnviarSolicitud);
+                    }
                 }
+            }
+
+            private boolean verificarEstadoSolicitud(int idProfesor) {
+                boolean resultado = false;
+                SolicitudColaboracionDAO solicitudColaboracionDAO = new SolicitudColaboracionDAO();
+                try {
+                    resultado = solicitudColaboracionDAO.verificarEstadoSolicitud(idProfesor);
+                } catch (SQLException e) {
+                    LOG.error("Error verificando el estado de las solicitudes", e);
+                }
+                return resultado;
             }
         });
     }

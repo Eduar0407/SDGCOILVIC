@@ -16,7 +16,7 @@
 
 <AnchorPane id="pane_Principal" prefHeight="520.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sdgcoilvic.controladores.GestionDeProfesoresControlador">
    <children>
-      <ImageView fx:id="imageSubMenu" fitHeight="707.0" fitWidth="1256.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imageSubMenu" fitHeight="707.0" fitWidth="1242.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/SubMenu.png" />
          </image>
@@ -35,11 +35,12 @@
             </Label>
             <TableView fx:id="tableView_Profesores" layoutX="35.0" layoutY="154.0" prefHeight="449.0" prefWidth="862.0">
                <columns>
-                  <TableColumn fx:id="column_Identificador" prefWidth="78.0" text="Identificador" />
-                  <TableColumn fx:id="column_Nombre" prefWidth="198.0" text="Nombre(s)" />
-                  <TableColumn fx:id="column_ApellidoPaterno" minWidth="0.0" prefWidth="186.0" text="Apellido Paterno" />
-                  <TableColumn fx:id="column_ApellidoMaterno" minWidth="0.0" prefWidth="180.0" text="Apellido Materno" />
-                  <TableColumn fx:id="column_Correo" prefWidth="219.0" text="Correo" />
+                  <TableColumn fx:id="column_Nombre" prefWidth="127.0" text="Nombre(s)" />
+                  <TableColumn fx:id="column_ApellidoPaterno" minWidth="0.0" prefWidth="122.0" text="Apellido Paterno" />
+                  <TableColumn fx:id="column_ApellidoMaterno" minWidth="0.0" prefWidth="143.0" text="Apellido Materno" />
+                  <TableColumn fx:id="column_Correo" prefWidth="223.0" text="Correo" />
+                  <TableColumn fx:id="column_Universidad" prefWidth="155.0" text="Universidad" />
+                  <TableColumn fx:id="column_Estado" prefWidth="91.0" text="Estado" />
                </columns>
             </TableView>
             <Button fx:id="button_Buscar" layoutX="459.0" layoutY="54.0" mnemonicParsing="false" onAction="#button_Buscar" prefWidth="68.0" style="-fx-background-color: #04c9fa;" text="Buscar" textFill="WHITE">
@@ -50,7 +51,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ComboBox fx:id="comboBox_Idioma" layoutX="194.0" layoutY="102.0" onAction="#comboIdiomaSeleccionado" prefHeight="25.0" prefWidth="88.0" promptText="Idioma">
+            <ComboBox fx:id="comboBox_Estado" layoutX="194.0" layoutY="102.0" onAction="#comboEstadoSeleccionado" prefHeight="25.0" prefWidth="90.0" promptText="Estado">
                <effect>
                   <ColorAdjust />
                </effect>
@@ -64,17 +65,12 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="comboBox_Pais" layoutX="296.0" layoutY="102.0" onAction="#comboPaisSeleccionado" prefWidth="150.0" promptText="País">
+            <ComboBox fx:id="comboBox_Institucion" layoutX="315.0" layoutY="102.0" onAction="#comboInstitucionSeleccionada" prefHeight="25.0" prefWidth="192.0" promptText="Institución">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
-            <ComboBox fx:id="comboBox_Institucion" layoutX="454.0" layoutY="102.0" onAction="#comboInstitucionSeleccionada" prefWidth="164.0" promptText="Institución">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ComboBox>
-            <Button fx:id="button_Regresar" layoutX="1004.0" layoutY="555.0" mnemonicParsing="false" onAction="#button_Regresar" style="-fx-background-color: #f03c02;" text="Regresar" textFill="WHITE">
+            <Button fx:id="button_Regresar" layoutX="1006.0" layoutY="550.0" mnemonicParsing="false" onAction="#button_Regresar" style="-fx-background-color: #f03c02;" text="Regresar" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -82,7 +78,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="button_ModificarProfesor" layoutX="951.0" layoutY="433.0" mnemonicParsing="false" onAction="#button_ModificarProfesor" prefHeight="37.0" prefWidth="231.0" style="-fx-background-color: #04c9fa;" text="Modificar profesor" textFill="WHITE">
+            <Button fx:id="button_ModificarProfesor" layoutX="951.0" layoutY="419.0" mnemonicParsing="false" onAction="#button_ModificarProfesor" prefHeight="37.0" prefWidth="231.0" style="-fx-background-color: #04c9fa;" text="Modificar profesor" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
